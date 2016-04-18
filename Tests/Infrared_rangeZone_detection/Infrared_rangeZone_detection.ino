@@ -12,18 +12,18 @@ int irRecPinRight = 3;
 int statusLedPinLeft = 7;
 int statusLedPinRight = 6;
 
-int irMaxFreq = 50000;
+int irMaxFreq = 58000;
 int irOptFreq = 38000;
-int irFreqStep = 1000;
-int nbrIRDistZones = (irMaxFreq-irOptFreq)/1000+1;
+int irFreqStep = 5000;
+int nbrIRDistZones = (irMaxFreq-irOptFreq)/irFreqStep+1;
 
 void setup()                                 // Built-in initialization block
 {
   Serial.begin(9600);                        // Set data rate to 9600 bps
   Serial.println("BooBoo initiated!"); 
-  tone(4, 2000,500);
-  delay(1000);
-  tone(4, 2000, 500);
+  //tone(4, 2000,500);
+  //delay(1000);
+  //tone(4, 2000, 500);
 
   pinMode(irRecPinLeft, INPUT);  pinMode(irLEDPinLeft, OUTPUT);   // IR LED & Receiver
   pinMode(irRecPinRight, INPUT);  pinMode(irLEDPinRight, OUTPUT);
@@ -32,8 +32,8 @@ void setup()                                 // Built-in initialization block
  
 void loop()                                  // Main loop auto-repeats
 {
-  int irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);         // Measure distance
-  int irDistRight = irDistance(irLEDPinRight, irRecPinRight);
+  float irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);         // Measure distance
+  float irDistRight = irDistance(irLEDPinRight, irRecPinRight);
   digitalWrite(statusLedPinLeft, LOW);
   digitalWrite(statusLedPinRight, LOW);
   
@@ -49,18 +49,27 @@ void loop()                                  // Main loop auto-repeats
   Serial.print(irDistLeft);
   Serial.print("  ");
   Serial.println(irDistRight); 
-  delay(100);                                // 0.1 second delay
+  //delay(100);                                // 0.1 second delay
 }
 
 // IR distance measurement function
 
-int irDistance(int irLedPin, int irReceivePin)
-{  
-  int distance = 0;
-  for(long f = irOptFreq; f <= irMaxFreq; f += irFreqStep) {
-    distance += irDetect(irLedPin, irReceivePin, f);
+float irDistance(int irLedPin, int irReceivePin)
+{ 
+  float nbrAvgIrRuns = 5.0;
+  float meanDistZone;
+  float sumDistZones = 0.0;
+  
+  for(int k = 1; k<= nbrAvgIrRuns; k++) { 
+    float distance = 0.0;
+    for(long f = irOptFreq; f <= irMaxFreq; f += irFreqStep) {
+      distance += irDetect(irLedPin, irReceivePin, f);
+    }
+    sumDistZones += distance;
   }
-  return distance;
+  meanDistZone = sumDistZones/nbrAvgIrRuns;
+
+  return meanDistZone/nbrIRDistZones; // Normalize to 1
 }
 
 // IR Detection function
