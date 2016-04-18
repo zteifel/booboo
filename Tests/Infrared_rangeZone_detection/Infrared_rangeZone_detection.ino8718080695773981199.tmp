@@ -1,0 +1,55 @@
+/*
+ * Distance range is from 0 to 5.  Only a small range of several centimeters  
+ * in front of each detector is measureable.  Most of it will be 0 (too 
+ * close) or 5 (too far).
+ */
+
+int irLEDPin = 3;
+int irRecPin = 2;
+
+void setup()                                 // Built-in initialization block
+{
+  Serial.println("BooBoo initiated!"); 
+  tone(4, 2000,500);
+  delay(1000);
+  tone(4, 2000, 500);                              // Delay to finish tone
+
+  pinMode(irRecPin, INPUT);  pinMode(irLEDPin, OUTPUT);   // IR LED & Receiver
+  
+  Serial.begin(9600);                        // Set data rate to 9600 bps
+}  
+ 
+void loop()                                  // Main loop auto-repeats
+{
+  int irDist = irDistance(irLEDPin, irRecPin);            // Measure distance
+  if(irDIst != 5)
+    {
+      tone(4, 2000,500);
+      delay(100);
+    }
+
+  Serial.println(irDist);                      // Display left distance
+  delay(100);                                // 0.1 second delay
+}
+
+// IR distance measurement function
+
+int irDistance(int irLedPin, int irReceivePin)
+{  
+  int distance = 0;
+  for(long f = 38000; f <= 42000; f += 1000) {
+    distance += irDetect(irLedPin, irReceivePin, f);
+  }
+  return distance;
+}
+
+// IR Detection function
+
+int irDetect(int irLedPin, int irReceiverPin, long frequency)
+{
+  tone(irLedPin, frequency, 8);              // IRLED 38 kHz for at least 1 ms
+  delay(1);                                  // Wait 1 ms
+  int ir = digitalRead(irReceiverPin);       // IR receiver -> ir variable
+  delay(1);                                  // Down time before recheck
+  return ir;                                 // Return 1 no detect, 0 detect
+}    
