@@ -1,35 +1,49 @@
-#include <Servo.h>          // Include servo library
+// Test of the ping sensor. Rotates the robot 
+// around and gathers measurements;
+
+#include <Servo.h> // Include servo library
     
 Servo servoLeft;
 Servo servoRight;
 
-// this constant won't change.  It's the pin number
-// of the sensor's output:
 const int pingPin = 8;
-long pingDist;
+
+long      pingDist;
 const int nMeasurements = 20;
-int measurements[nMeasurements];
-int nRotations = 0;
+int       measurements[nMeasurements];
+int       measureIndex = 0;
+
+const bool clockwise = true;
+const bool counterClockwise = false;
 
 void setup() {
   // initialize serial communication:
   Serial.begin(9600);
+  
   servoLeft.attach(13);
   servoRight.attach(12);
 }
 
 void loop() {
-  // establish variables for duration of the ping,
-  // and the distance result in inches and centimeters:
-  
-
-  rotateStep(false);
+  rotateStep(counterClockwise);
   pingDist = measurePingDist();
-  measurements[nRotations] = pingDist;
-  Serial.println(String(measurements[nRotations]));
-  ++nRotations %= nMeasurements;
+  
+  measurements[measureIndex] = pingDist;
+  Serial.println(arrayToString(measurements,nMeasurements));
+  
+  //Loop around to 0 before out of bounds:
+  ++measureIndex %= nMeasurements;
 
   delay(100);
+}
+
+String arrayToString(int array[], int arrayLength)
+{
+  String s = "[ ";
+  for(int i=0; i < arrayLength; i++){
+    s+=String(array[i])+" ";
+  }
+  return s + "]";
 }
 long measurePingDist(){
   long duration, cm;
@@ -49,10 +63,7 @@ long measurePingDist(){
   duration = pulseIn(pingPin, HIGH);
 
   // convert the time into a distance
-  cm = microsecondsToCentimeters(duration);
-
-  //Serial.println(String(cm)+" cm");
-  return cm;
+  return microsecondsToCentimeters(duration);
 }
 
 void rotateStep(bool clockwise) {
@@ -66,9 +77,6 @@ void rotateStep(bool clockwise) {
   delay(100);
   servoLeft.writeMicroseconds(1500);
   servoRight.writeMicroseconds(1500);
-}
-void standStill() {
-  
 }
 
 long microsecondsToCentimeters(long microseconds) {
