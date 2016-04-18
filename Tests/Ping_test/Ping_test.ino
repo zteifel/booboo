@@ -6,6 +6,10 @@ Servo servoRight;
 // this constant won't change.  It's the pin number
 // of the sensor's output:
 const int pingPin = 8;
+long pingDist;
+const int nMeasurements = 20;
+int measurements[nMeasurements];
+int nRotations = 0;
 
 void setup() {
   // initialize serial communication:
@@ -17,8 +21,18 @@ void setup() {
 void loop() {
   // establish variables for duration of the ping,
   // and the distance result in inches and centimeters:
-  long duration, inches, cm;
+  
 
+  rotateStep(false);
+  pingDist = measurePingDist();
+  measurements[nRotations] = pingDist;
+  Serial.println(String(measurements[nRotations]));
+  ++nRotations %= nMeasurements;
+
+  delay(100);
+}
+long measurePingDist(){
+  long duration, cm;
   // The PING))) is triggered by a HIGH pulse of 2 or more microseconds.
   // Give a short LOW pulse beforehand to ensure a clean HIGH pulse:
   pinMode(pingPin, OUTPUT);
@@ -37,11 +51,8 @@ void loop() {
   // convert the time into a distance
   cm = microsecondsToCentimeters(duration);
 
-  Serial.println(String(cm)+" cm");
-
-  rotateStep(false);
-
-  delay(100);
+  //Serial.println(String(cm)+" cm");
+  return cm;
 }
 
 void rotateStep(bool clockwise) {
@@ -52,7 +63,7 @@ void rotateStep(bool clockwise) {
     servoLeft.writeMicroseconds(1300);
     servoRight.writeMicroseconds(1300);
   }
-  delay(50);
+  delay(100);
   servoLeft.writeMicroseconds(1500);
   servoRight.writeMicroseconds(1500);
 }
