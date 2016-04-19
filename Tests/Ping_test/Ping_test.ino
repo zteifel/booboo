@@ -12,6 +12,7 @@ long      pingDist;
 const int nMeasurements = 20;
 int       measurements[nMeasurements];
 int       measureIndex = -1;
+int       stepsSinceDetection;
 
 const int STATE_SEARCH    = 0;
 const int STATE_SCAN      = 1;
@@ -33,12 +34,29 @@ void setup() {
 
 void loop() {
   switch (currentState) {
-    case STATE_SEARCH:
-      measure();
+    case STATE_SEARCH:   
       rotateStep(counterClockwise);
+      measure();
       if(detectsSomething()){
         stopMovement();
         tone(4, 4000, 500);
+        stepsSinceDetection = 0;
+        currentState = STATE_SCAN;
+      }
+      delay(100);
+      break;
+    case STATE_SCAN:
+      rotateStep(counterClockwise);
+      measure();
+      if(detectsSomething()){
+        stepsSinceDetection++;
+      } else{
+        stepsSinceDetection /= 2;
+        stepsSinceDetection += 2;
+        while(stepsSinceDetection--){
+          rotateStep(clockwise);
+          delay(100);
+        }       
         currentState = STATE_APPROACH;
       }
       delay(100);
