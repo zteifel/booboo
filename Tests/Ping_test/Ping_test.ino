@@ -12,6 +12,10 @@ long      pingDist;
 const int nMeasurements = 20;
 int       measurements[nMeasurements];
 int       measureIndex = 0;
+const int STATE_SEARCH    = 0;
+const int STATE_APPROACH  = 1;
+const int STATE_FOUND     = 2;
+int       currentState = STATE_SEARCH;
 
 const bool clockwise = true;
 const bool counterClockwise = false;
@@ -25,16 +29,51 @@ void setup() {
 }
 
 void loop() {
-  rotateStep(counterClockwise);
+ 
   pingDist = measurePingDist();
-  
   measurements[measureIndex] = pingDist;
   Serial.println(arrayToString(measurements,nMeasurements));
-  
+
+  switch (currentState) {
+    case STATE_SEARCH:
+      rotateStep(counterClockwise);
+      if((measurements[measureIndex]<100) &&
+         (measurements[measureIndex] < getMeanMeasurement(4)*0.66)
+        ){
+        stopMovement();
+        tone(4, 5000, 500);
+        delay(1000);
+        tone(4, 4000, 500);
+        currentState = STATE_APPROACH;
+      }
+      delay(100);
+      break;
+    case STATE_APPROACH:
+      if(measurements[measureIndex]<10){
+        currentState = STATE_FOUND;
+        stopMovement();
+      } else { 
+        moveForward();
+      }
+      break;
+    case STATE_FOUND:
+      stopMovement();
+      if(measurements[measureIndex]>10){
+        currentState = STATE_SEARCH;
+      }
+      break;
+  }
   //Loop around to 0 before out of bounds:
   ++measureIndex %= nMeasurements;
+}
 
-  delay(100);
+long getMeanMeasurement(int n){
+  long sum = 0;
+  for(int i=1; i<=n; i++){
+    int arrayIndex = (measureIndex - i + nMeasurements) % nMeasurements;
+    sum += measurements[arrayIndex];
+  }
+  return (sum/n)+0.5;
 }
 
 String arrayToString(int array[], int arrayLength)
@@ -74,9 +113,18 @@ void rotateStep(bool clockwise) {
     servoLeft.writeMicroseconds(1300);
     servoRight.writeMicroseconds(1300);
   }
-  delay(100);
+  delay(50);
+  stopMovement();
+}
+
+void stopMovement(){
   servoLeft.writeMicroseconds(1500);
   servoRight.writeMicroseconds(1500);
+}
+
+void moveForward(){
+  servoLeft.writeMicroseconds(1700);
+  servoRight.writeMicroseconds(1300);
 }
 
 long microsecondsToCentimeters(long microseconds) {
