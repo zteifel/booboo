@@ -1,21 +1,5 @@
-/*
- * Distance range is from 0 to 5.  Only a small range of several centimeters  
- * in front of each detector is measureable.  Most of it will be 0 (too 
- * close) or 5 (too far).
- */
-
-int irLEDPinLeft = 9;
-int irRecPinLeft = 10;
-int irLEDPinRight = 2;
-int irRecPinRight = 3;
-
-int statusLedPinLeft = 7;
-int statusLedPinRight = 6;
-
-int irMaxFreq = 58000;
-int irOptFreq = 38000;
-int irFreqStep = 5000;
-int nbrIRDistZones = (irMaxFreq-irOptFreq)/irFreqStep+1;
+#include "declarations.h"
+#include "irDistance.h"
 
 void setup()                                 // Built-in initialization block
 {
