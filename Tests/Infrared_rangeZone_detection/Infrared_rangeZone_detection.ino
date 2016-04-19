@@ -1,5 +1,5 @@
 #include "declarations.h"
-#include "irDistance.h"
+//#include "irDistance.h"
 
 void setup()                                 // Built-in initialization block
 {
@@ -22,11 +22,11 @@ void loop()                                  // Main loop auto-repeats
   digitalWrite(statusLedPinRight, LOW);
   
   
-  if(irDistLeft != nbrIRDistZones){
+  if(irDistLeft < 0.8){
       digitalWrite(statusLedPinLeft, HIGH);
     }
   
-  if(irDistRight != nbrIRDistZones){
+  if(irDistRight < 0.8){
        digitalWrite(statusLedPinRight, HIGH); 
     }
   
@@ -60,7 +60,7 @@ float irDistance(int irLedPin, int irReceivePin)
 
 int irDetect(int irLedPin, int irReceiverPin, long frequency)
 {
-  tone(irLedPin, frequency, 8);              // IRLED 38 kHz for at least 1 ms
+  tone(irLedPin, frequency, 10);              // IRLED 38 kHz for at least 1 ms
   delay(1);                                  // Wait 1 ms
   int ir = digitalRead(irReceiverPin);       // IR receiver -> ir variable
   delay(1);                                  // Down time before recheck
