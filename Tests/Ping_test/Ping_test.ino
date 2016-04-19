@@ -11,10 +11,13 @@ const int pingPin = 8;
 long      pingDist;
 const int nMeasurements = 20;
 int       measurements[nMeasurements];
-int       measureIndex = 0;
+int       measureIndex = -1;
+
 const int STATE_SEARCH    = 0;
-const int STATE_APPROACH  = 1;
-const int STATE_FOUND     = 2;
+const int STATE_SCAN      = 1;
+const int STATE_APPROACH  = 2;
+const int STATE_FOUND     = 3;
+
 int       currentState = STATE_SEARCH;
 
 const bool clockwise = true;
@@ -29,26 +32,19 @@ void setup() {
 }
 
 void loop() {
- 
-  pingDist = measurePingDist();
-  measurements[measureIndex] = pingDist;
-  Serial.println(arrayToString(measurements,nMeasurements));
-
   switch (currentState) {
     case STATE_SEARCH:
+      measure();
       rotateStep(counterClockwise);
-      if((measurements[measureIndex]<100) &&
-         (measurements[measureIndex] < getMeanMeasurement(4)*0.66)
-        ){
+      if(detectsSomething()){
         stopMovement();
-        tone(4, 5000, 500);
-        delay(1000);
         tone(4, 4000, 500);
         currentState = STATE_APPROACH;
       }
       delay(100);
       break;
     case STATE_APPROACH:
+      measure();
       if(measurements[measureIndex]<10){
         currentState = STATE_FOUND;
         stopMovement();
@@ -57,16 +53,28 @@ void loop() {
       }
       break;
     case STATE_FOUND:
+      measure();
       stopMovement();
       if(measurements[measureIndex]>10){
         currentState = STATE_SEARCH;
       }
       break;
   }
-  //Loop around to 0 before out of bounds:
-  ++measureIndex %= nMeasurements;
 }
 
+void measure(){
+  //Loop around to 0 before out of bounds:
+  ++measureIndex %= nMeasurements;
+  
+  pingDist = measurePingDist();
+  measurements[measureIndex] = pingDist;
+  Serial.println(arrayToString(measurements,nMeasurements));
+}
+bool detectsSomething(){
+  return measurements[measureIndex] < 100;
+  //return (measurements[measureIndex]<100) &&
+  //(measurements[measureIndex] < getMeanMeasurement(4)*0.66);
+}
 long getMeanMeasurement(int n){
   long sum = 0;
   for(int i=1; i<=n; i++){
