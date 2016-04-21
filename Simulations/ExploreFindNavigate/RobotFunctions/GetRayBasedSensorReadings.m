@@ -1,12 +1,8 @@
 function s = GetRayBasedSensorReadings(robot, arena)
 
 s = robot.Sensors;
-numberOfSensors = size(s,2);
+s(1) = GetLRFReading(s(1),arena);  %% Only one sensor (LRF) in this example
 
-for i=1:numberOfSensors
- if (s(i).Type == 'IR') 
-   s(i) = GetIRSensorReading(s(i),arena);
- end
 end
 
 

@@ -46,8 +46,13 @@ for i = 1:numberOfSensors
  if (robot.ShowSensorRays)
   for j = 1:robot.Sensors(i).NumberOfRays 
    sensorRayHandle = findobj('Tag',[robot.Sensors(i).Name 'Ray' char(48+j)]);
-   dx = robot.Sensors(i).RayLengths(j)*cos(robot.Sensors(i).RayDirections(j));
-   dy = robot.Sensors(i).RayLengths(j)*sin(robot.Sensors(i).RayDirections(j));
+   if (robot.Sensors(i).RayLengths(j) >= 0)
+    dx = robot.Sensors(i).RayLengths(j)*cos(robot.Sensors(i).RayDirections(j));
+    dy = robot.Sensors(i).RayLengths(j)*sin(robot.Sensors(i).RayDirections(j));
+   else
+    dx = 0;
+    dy = 0;
+   end
    set(sensorRayHandle,'Xdata', [x0 x0+dx], 'YData', [y0 y0+dy]);
   end
  end 

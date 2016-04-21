@@ -2,9 +2,10 @@ function b = BrainStep(robot, time);
 
 b = robot.Brain;
 
-%% Add code here
-
-
-
+%%%%%%%%%%%%%%%% FSM: %%%%%%%%%%%%%%%%%%%%
+if (b.CurrentState == 0) % Forward motion
+ b.LeftMotorSignal = b.ForwardMotorSignal;
+ b.RightMotorSignal = b.ForwardMotorSignal;
+end
 
 

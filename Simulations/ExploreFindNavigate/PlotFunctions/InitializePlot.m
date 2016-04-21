@@ -97,8 +97,8 @@ end % If Odometer present
 
 numberOfSensors = size(robot.Sensors,2);
 for i = 1:numberOfSensors
- x0 = x + robot.Radius*cos(angle+robot.Sensors(i).RelativeAngle);
- y0 = y + robot.Radius*sin(angle+robot.Sensors(i).RelativeAngle);
+ x0 = x; % + robot.Radius*cos(angle+robot.Sensors(i).RelativeAngle);
+ y0 = y; % + robot.Radius*sin(angle+robot.Sensors(i).RelativeAngle);
  sensorHandle = findobj('Tag',robot.Sensors(i).Name);
  if (~isempty(sensorHandle))
   set(sensorHandle,'Position',[x0-robot.Sensors(i).Size, y0-robot.Sensors(i).Size,...
@@ -118,15 +118,20 @@ for i = 1:numberOfSensors
   x0 = robot.Sensors(i).Position(1);
   y0 = robot.Sensors(i).Position(2);
 
-  for j = 1:robot.Sensors(i).NumberOfRays
-   dx = robot.Sensors(i).RayLengths(j)*cos(robot.Sensors(i).RayDirections(j));
-   dy = robot.Sensors(i).RayLengths(j)*sin(robot.Sensors(i).RayDirections(j));
+  for j = 1:robot.Sensors(i).NumberOfRays 
+   if (robot.Sensors(i).RayLengths(j) >= 0)
+    dx = robot.Sensors(i).RayLengths(j)*cos(robot.Sensors(i).RayDirections(j));
+    dy = robot.Sensors(i).RayLengths(j)*sin(robot.Sensors(i).RayDirections(j));
+   else
+    dx = 0;
+    dy = 0;
+   end
    sensorRayHandle = findobj('Tag',[robot.Sensors(i).Name 'Ray' char(48+j) ]);
    if (~isempty(sensorRayHandle))
      set(sensorRayHandle,'Xdata', [x0 x0+dx], 'YData', [y0 y0+dy]);
    else
      sensorRayHandle = patch('XData',[x0 x0+dx],'YData',[y0 y0+dy]);
-     set(sensorRayHandle,'Tag',[robot.Sensors(i).Name 'Ray' char(48+j) ]);
+     set(sensorRayHandle,'EdgeColor','Red','Tag',[robot.Sensors(i).Name 'Ray' char(48+j) ]);
    end
   end % for j
  end % robot.ShowSensorRays
