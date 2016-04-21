@@ -1,0 +1,11 @@
+1. Välj det närmaste
+2. Kan det vara en cylinder? Om ja, åk dit
+3. Fortsätt med näst närmaste?
+4. Om inget kan vara cylinder, ta största tomma området i synfältet och åk dit.
+
+
+Vad kan vara cylinder?
+* Närmare än 65 cm
+* Bredd på område <= 5 cm    //Kalibrera för robot utan sladd
+* Om bara en mätpunkt, behöver den vara längre bort än 30 cm //Kalibrera för robot utan sladd
+ 
