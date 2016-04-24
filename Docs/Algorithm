@@ -6,6 +6,6 @@
 
 Vad kan vara cylinder?
 * Närmare än 65 cm
-* Bredd på område <= 5 cm    //Kalibrera för robot utan sladd
+* Bredd på område <= 5 mätpunkter    //Kalibrera för robot utan sladd
 * Om bara en mätpunkt, behöver den vara längre bort än 30 cm //Kalibrera för robot utan sladd
  
