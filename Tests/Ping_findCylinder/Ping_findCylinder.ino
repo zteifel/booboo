@@ -10,14 +10,12 @@ const int pingPin = 8;
 const int stepsInFullTurn = 25;
 const int discardCylDist = 65;
 const int horizonDist = 300;
-
-long      pingDist;
-int       measurements[stepsInFullTurn];
-int       noCylinder[stepsInFullTurn]; //////////// <-- Använd detta!!!!!!!!!
-
 const bool clockwise = true;
 const bool counterClockwise = false;
 
+long pingDist;
+int  measurements[stepsInFullTurn];
+int  noCylinder[stepsInFullTurn];
 
 void setup() {
   // initialize serial communication:
