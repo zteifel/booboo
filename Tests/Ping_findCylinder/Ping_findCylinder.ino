@@ -123,14 +123,11 @@ int nextIndex(int index, int arrayLength){
 // getIndexOfLargestOpenInterval to get a free new direction
 // to explore.
 int findCylinder(){
-  //stepsInFullTurn;
-  //measurements;
   const int l = stepsInFullTurn;
 
-  while(1){
+  while(true){
     int nearestIndex = getIndexMin();
-
-    if(nearestIndex = -1){
+    if(nearestIndex == -1){
       return getIndexOfLargestOpenInterval();
     }
     
@@ -138,17 +135,17 @@ int findCylinder(){
     int iR = nextIndex(nearestIndex,l);
     int intervalLength = 0;
   
-    while(abs(measurements[iL])-abs(measurements[iR]) < 5){
+    while(abs(measurements[nearestIndex] - measurements[iL]) < 5){
       iL = prevIndex(iL,l);
       intervalLength++;
     }
-    while(abs(measurements[iR])-abs(measurements[iR]) < 5){
-      iR = prevIndex(iR,l);
+    while(abs(measurements[nearestIndex] - measurements[iR]) < 5){
+      iR = nextIndex(iR,l);
       intervalLength++;
     }
 
-    if(intervalLength < 5){
-      return (int)(iL+intervalLength/2) % intervalLength;
+    if(intervalLength <= 5){
+      return iL<iR ? (iL + iR)/2 : ((iL + iR+l)/2)%l;
     } else {
       for(int i=iL; i<iR; i++){
         noCylinder[i] = true; 
@@ -156,14 +153,13 @@ int findCylinder(){
     }
   }
 }
-
 // Index of the closest measured distance
 int getIndexMin(){
-  int minVal = 500;   //Max
+  int minVal = 500; //Max
   int iMinVal = -1;
   
   for(int i=0; i<stepsInFullTurn; i++){
-    if( !noCylinder[i] && (minVal > measurements[i]) ){
+    if( !noCylinder[i] && (measurements[i] < minVal) ){
       iMinVal = i;
       minVal = measurements[i];
     }
