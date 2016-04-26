@@ -8,7 +8,7 @@
 % Send bug reports to: mattias.wahde@chalmers.se
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+close all;
 clear all;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -31,17 +31,19 @@ end
 % Generate arena:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 arenaSize = [-5 5 -5 5]; 
-arenaObject1 = CreateArenaObject('arenaObject1',[[1 1.5]; [1 0.7]; [1.9 0.7]; [1.9 1.5]]);
-arenaObject2 = CreateArenaObject('arenaObject2',[[-5.0 -5.0]; [-4.8 -5.0]; [-4.8 5.0]; [-5.0 5.0]]);
-arenaObject3 = CreateArenaObject('arenaObject3',[[-4.8 -5.0]; [4.8 -5.0]; [4.8 -4.8]; [-4.8 -4.8]]);
-arenaObject4 = CreateArenaObject('arenaObject4',[[5.0 -5.0]; [4.8 -5.0]; [4.8 5.0]; [5.0 5.0]]);
-arenaObject5 = CreateArenaObject('arenaObject5',[[-4.8 5.0]; [4.8 5.0]; [4.8 4.8]; [-4.8 4.8]]);
-arenaObject6 = CreateArenaObject('arenaObject6',[[2 -2]; [2 -1.5]; [3 -1.5]; [3 -2]]);
-arenaObject7 = CreateArenaObject('arenaObject7',[[-3 -2]; [-3 -1.5]; [-2.5 -1.5]; [-2.5 -2]]);
-arenaObject8 = CreateArenaObject('arenaObject8',[[-2 1.5]; [-2 3]; [-1.5 3]; [-1.5 1.5]]);
-testArena = CreateArena('arena',arenaSize,[arenaObject1; arenaObject2; arenaObject3;...
-                                           arenaObject4; arenaObject5; arenaObject6;...
-                                           arenaObject7; arenaObject8]);
+% Arena walls
+arenaObject1 = CreateArenaObject('arenaObject1',[[-5.0 -5.0]; [-4.8 -5.0]; [-4.8 5.0]; [-5.0 5.0]]);
+arenaObject2 = CreateArenaObject('arenaObject2',[[-4.8 -5.0]; [4.8 -5.0]; [4.8 -4.8]; [-4.8 -4.8]]);
+arenaObject3 = CreateArenaObject('arenaObject3',[[5.0 -5.0]; [4.8 -5.0]; [4.8 5.0]; [5.0 5.0]]);
+arenaObject4 = CreateArenaObject('arenaObject4',[[-4.8 5.0]; [4.8 5.0]; [4.8 4.8]; [-4.8 4.8]]);
+
+% Cylinders
+cylinderRadius = 0.15;
+arenaObject5 = CreateArenaObject('arenaObject5',cylinderRadius*[cos(linspace(0,2*pi,50)); sin(linspace(0,2*pi,50))]');
+
+testArena = CreateArena('arena',arenaSize,[arenaObject1; arenaObject2;...
+                                           arenaObject3; arenaObject4;...
+                                           arenaObject5]);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -58,11 +60,28 @@ brain = CreateBrain;
 % LRF:
 %%%%%%%%%%%%%%%%%%
 size = 0.0500;
-numberOfRays = 15;
-openingAngle = 3.1415926535;
-range = 4.0000;
+numberOfRays = 3;
+openingAngle = 52.6/180*pi; 
+range = 1.0;
 sigma = 0.001;
 lrfSensor = CreateLRF('lrfSensor',size,numberOfRays,openingAngle,range,sigma);
+
+%%%%%%%%%%%%%%%%%%%%
+% IR sensors
+%%%%%%%%%%%%%%%%%%%
+sensor1RelativeAngle = 0.7854;
+sensor2RelativeAngle = -0.7854;
+size = 0.0500;
+numberOfRays = 3;
+openingAngle = 2.300;
+range = 0.4;
+c1 = 0.0300;
+c2 = 0.1000;
+sigma = 0.0200;
+sensor1 = CreateIRSensor('sensor1',sensor1RelativeAngle,size,...
+                          numberOfRays,openingAngle,range,c1,c2,sigma);
+sensor2 = CreateIRSensor('sensor2',sensor2RelativeAngle,size,...
+                          numberOfRays,openingAngle,range,c1,c2,sigma);
 
 %%%%%%%%%%%%%%%%%%%%
 % Odometer:
@@ -81,25 +100,25 @@ radius = 0.2000;
 wheelRadius = 0.1000;
 
 %% Robot with LRF and odometer:
-   testRobot = CreateRobot('TestRobot',mass,momentOfInertia,radius,wheelRadius, ...
-                       [lrfSensor],[leftMotor rightMotor],odometer,[],brain);
+testRobot = CreateRobot('TestRobot',mass,momentOfInertia,radius,wheelRadius, ...
+                       [lrfSensor sensor1 sensor2],[leftMotor rightMotor],odometer,[],brain);
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Miscellaneous simulation parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 showPlot = true;
 plotStep = 10;
 recordResults = true;
 testRobot.ShowSensorRays = true;
-testRobot.ShowOdometricGhost = true;
+testRobot.ShowOdometricGhost = false;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Initialization:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 position = [-3.2000 0.0000];
-heading = 0.0000;
+heading = pi/8;
 velocity = [0.0000 0.0000];
 angularSpeed = 0.0000;
 
@@ -115,7 +134,7 @@ if (recordResults)
  motionResults = InitializeMotionResults(testRobot);
 end
 
-maxSteps = 2500;
+maxSteps = 10000;
 dt = 0.01;
 time = 0.0;
 collided = false;
@@ -123,16 +142,16 @@ collided = false;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Main loop:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+halfLap = 0;
 i=1;
 while ((i < maxSteps) & (~collided))
    testRobot.RayBasedSensors = GetRayBasedSensorReadings(testRobot,testArena);
-   if (~isempty(testRobot.Odometer))
-    testRobot.Odometer = GetOdometerReading(testRobot,dt);
-   end 
-   if (~isempty(testRobot.Compass))
-    testRobot.Compass = GetCompassReading(testRobot,dt);
-   end  
+%    if (~isempty(testRobot.Odometer))
+%     testRobot.Odometer = GetOdometerReading(testRobot,dt);
+%    end 
+%    if (~isempty(testRobot.Compass))
+%     testRobot.Compass = GetCompassReading(testRobot,dt);
+%    end  
    testRobot.Brain = BrainStep(testRobot, time);
    testRobot = MoveRobot(testRobot,dt);
 
@@ -140,6 +159,15 @@ while ((i < maxSteps) & (~collided))
    if (recordResults)
     motionResults = AddMotionResults(motionResults,time,testRobot); 
    end
+   
+%    if ((halfLap == 1) && (motionResults.Heading(end) > 0))
+%      break
+%    end
+%    
+%    if (motionResults.Heading(end) < 0)
+%      halfLap = 1;
+%    end
+     
 
    i = i + 1;
 
