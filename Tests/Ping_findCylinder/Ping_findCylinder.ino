@@ -174,20 +174,21 @@ int getIndexOfLargestOpenInterval(){
   int iRightLargest = 0;
   int startIndex = 0;
 
-  while(measurements[startIndex] >= horizonDist){
-    startIndex = prevIndex(startIndex,stepsInFullTurn);
-  }
-  
-  int iLeft = startIndex;
+  int iLeft;
   int iRight;
-  
-  for(int i=0; i<stepsInFullTurn; i++){  
-    while(measurements[iLeft] < horizonDist){
-      iLeft = nextIndex(iLeft,stepsInFullTurn);
-    }
+  int i=-1;
+  while(true) {
+    //Take step into possible new intervall:
+    iLeft = nextIndex(i,stepsInFullTurn);
+    
     iRight = iLeft;
+    
     int intervalWidth = 0;
     while(measurements[iLeft] < horizonDist){
+      iLeft = prevIndex(iLeft,stepsInFullTurn);
+      intervalWidth++;
+    }
+    while(measurements[iRight] < horizonDist){
       iRight = nextIndex(iRight,stepsInFullTurn);
       intervalWidth++;
     }
@@ -196,7 +197,13 @@ int getIndexOfLargestOpenInterval(){
       iLeftLargest = iLeft;
       iRightLargest = iRight;
     }
+    
+    i=iRight;
   }
-  return (int)(iLeftLargest+lenLargest/2) % lenLargest;
+  
+  return iLeftLargest<iRightLargest ? 
+    (iRightLargest + iRightLargest)/2 : 
+    ((iRightLargest + iRightLargest + stepsInFullTurn)/2) % stepsInFullTurn;
 }
+
 
