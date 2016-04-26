@@ -16,6 +16,7 @@ const bool counterClockwise = false;
 long pingDist;
 int  measurements[stepsInFullTurn];
 int  noCylinder[stepsInFullTurn];
+int  stepsToCylinder;
 
 void setup() {
   // initialize serial communication:
@@ -29,9 +30,14 @@ void setup() {
 }
 
 void loop(){
-	measure();
+  measure();
   Serial.println(arrayToString(measurements,stepsInFullTurn));
-  delay(2000); 
+  delay(1000);
+  stepsToCylinder = findCylinder();
+  for(int i=0; i<stepsToCylinder; i++){
+    rotateStep(counterClockwise);
+  }
+  delay(4000);
 }
 
 // Performs full turn and saves measurements to array
@@ -41,7 +47,7 @@ void measure(){
     rotateStep(counterClockwise);
     int m = measurePingDist();
     measurements[i] = m;
-    if(m < discardCylDist)
+    if(m > discardCylDist) // TODO Should be "m > discardCylDist"?
       noCylinder[i] = true;
   }
 }
@@ -172,7 +178,9 @@ int getIndexOfLargestOpenInterval(){
   int lenLargest = 0;
   int iLeftLargest = 0;
   int iRightLargest = 0;
-  int startIndex = 0;
+  int nbrOfRightChecks = 0;
+  //int startIndex = 0; // TODO This variable was unused
+  
 
   int iLeft;
   int iRight;
@@ -191,6 +199,7 @@ int getIndexOfLargestOpenInterval(){
     while(measurements[iRight] < horizonDist){
       iRight = nextIndex(iRight,stepsInFullTurn);
       intervalWidth++;
+      nbrOfRightChecks++;
     }
     if(intervalWidth > lenLargest){
       lenLargest = intervalWidth;
@@ -199,6 +208,11 @@ int getIndexOfLargestOpenInterval(){
     }
     
     i=iRight;
+    
+    // When all points have been examined, continue!
+    if(nbrOfRightChecks > stepsInFullTurn){
+      break;
+    }
   }
   
   return iLeftLargest<iRightLargest ? 
