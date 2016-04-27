@@ -24,8 +24,7 @@ int nbrIRDistZones = (irMaxFreq-irOptFreq)/irFreqStep+1;
 float irNbrAvgRuns = 5.0;
 float irMeanDistZone;
 float irSumDistZones = 0.0;
-float irTmpDist;
-float irDistLeft, irDistRight;
-float irDetected;
+float irDistance;
+int irDetected;
 
 #endif
