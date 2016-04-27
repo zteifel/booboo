@@ -4,10 +4,10 @@
 // Arduino pins
 
 // Pins for IR
-int irRecPinLeft = 2;		// 200 ohm resistor
-int irRecPinRight = 3;	// 200 ohm resistor
-int irLEDPinLeft = 4;		// 1.8k ohm resistor
-int irLEDPinRight = 5;	// 1.8k ohm resistor
+int irRecPinLeft = 5;		// 200 ohm resistor
+int irRecPinRight = 4;	// 200 ohm resistor
+int irLEDPinLeft = 3;		// 1.8k ohm resistor
+int irLEDPinRight = 2;	// 1.8k ohm resistor
 
 
 // Other

@@ -5,9 +5,9 @@ void setup()                                 // Built-in initialization block
 {
   Serial.begin(9600);                        // Set data rate to 9600 bps
   Serial.println("BooBoo initiated!"); 
-  tone(speakerPin, 2000,500);
-  delay(1000);
-  tone(speakerPin, 2000, 500);
+  //tone(speakerPin, 2000,500);
+  //delay(1000);
+  //tone(speakerPin, 2000, 500);
 
   pinMode(irRecPinLeft, INPUT);  pinMode(irLEDPinLeft, OUTPUT);   // IR LED & Receiver
   pinMode(irRecPinRight, INPUT);  pinMode(irLEDPinRight, OUTPUT);
@@ -20,8 +20,8 @@ void loop()                                  // Main loop auto-repeats
   
   Serial.print(irDistLeft);
   Serial.print("  ");
-  Serial.println(irDistRight); 
-  //delay(100);                                // 0.1 second delay
+  Serial.println(irDistRight);
+
 }
 
 // IR distance measurement function
