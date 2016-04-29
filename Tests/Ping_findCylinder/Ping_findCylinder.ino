@@ -16,6 +16,7 @@ const bool counterClockwise = false;
 
 long pingDist;
 int  measurements[stepsInFullTurn];
+int  currentIndex = 0;
 int  noCylinder[stepsInFullTurn];
 int  stepsToCylinder;
 
@@ -31,35 +32,38 @@ void setup() {
 }
 
 void loop(){
-  measure();
-  tone(beepPin, 2000, 500);
-  Serial.println(arrayToString(measurements,stepsInFullTurn));
-  delay(1000);
-  stepsToCylinder = findCylinder();
-  Serial.println("Cylinder at index: "+String(stepsToCylinder));
-  tone(beepPin, 2000, 500);
-  for(int i=0; i<stepsInFullTurn-stepsToCylinder; i++){
-    rotateStep(clockwise);
+  currentIndex ++;
+  currentIndex %= stepsInFullTurn;
+  
+  rotateStep(counterClockwise);
+  int m = measurePingDist();
+  
+  Serial.println(arrayToString(measurements, stepsInFullTurn));
+  measurements[currentIndex] = m;
+  if(m > discardCylDist) // TODO Should be "m > discardCylDist"?
+    noCylinder[currentIndex] = true;
+  int cyl = findCylinder(currentIndex);
+  if(cyl != -1){
+    Serial.println("found cyl "+String(cyl)+" steps away");
+    while(cyl--){
+      rotateStep(clockwise);
+    }
+    while(measurePingDist() > 5){
+      //.println("Approaching cylinder!! dist:"+String(measurePingDist()));
+      moveForward();
+      delay(500);
+    }
+    stopMovement();
+    beep();
+    delay(5000);
   }
-  tone(beepPin, 5000, 500);
-  while(measurePingDist()>10){
-    moveForward();
-  }
-  delay(4000);
 }
 
-// Performs full turn and saves measurements to array
-// Notes measurements that are too far to be a cylinder
-void measure(){ 
-  for(int i=0; i<stepsInFullTurn; i++){ 
-    rotateStep(counterClockwise);
-    int m = measurePingDist();
-    
-    Serial.println("Measured: "+String(m));
-    measurements[i] = m;
-    if(m > discardCylDist) // TODO Should be "m > discardCylDist"?
-      noCylinder[i] = true;
-  }
+void beep() {
+for (int i=1000; i<2000; i=i*1.02) { tone(beepPin,i,10); delay(20); } for (int i=2000; i>1000; i=i*.98) {
+tone(beepPin,i,10);
+delay(20);
+}
 }
 
 String arrayToString(int array[], int arrayLength)
@@ -142,34 +146,43 @@ int nextIndex(int index, int arrayLength){
 // If no intervals can be cylinders, call
 // getIndexOfLargestOpenInterval to get a free new direction
 // to explore.
-int findCylinder(){
+int findCylinder(int maxIndex){
+  if(maxIndex < 10)
+    return -1;
   const int l = stepsInFullTurn;
 
   while(true){
-    int nearestIndex = getIndexMin();
+    int nearestIndex = getIndexMin(maxIndex);
     
     Serial.println("Nearest index found: "+String(nearestIndex));
     if(nearestIndex == -1){
-      return getIndexOfLargestOpenInterval();
+      //return getIndexOfLargestOpenInterval();
+      return -1;
     }
-    int iL = prevIndex(nearestIndex,l);
-    int iR = nextIndex(nearestIndex,l);
+    int iL = nearestIndex-1;
+    int iR = nearestIndex+1;
     int intervalLength = 0;
   
     while(abs(measurements[nearestIndex] - measurements[iL]) < 5){
-      iL = prevIndex(iL,l);
+      iL--;
       intervalLength++;
+      if(iL<0){
+        return -1; //error();
+      }
     }
     while(abs(measurements[nearestIndex] - measurements[iR]) < 5){
-      iR = nextIndex(iR,l);
+      iR++;
       intervalLength++;
+      if(iR >= maxIndex){
+        return -1; //Should continue measuring
+      }
     }
 
     
     Serial.println("intervalLength: "+String(intervalLength));
 
     if(intervalLength <= 5){
-      return iL<iR ? (iL + iR)/2 : ((iL + iR+l)/2)%l;
+      return maxIndex-(iL + iR)/2;
     } else {
       for(int i=iL; i<iR; i=nextIndex(i,l)){
         noCylinder[i] = true; 
@@ -177,13 +190,18 @@ int findCylinder(){
     }
   }
 }
+
+void error(){
+  tone(beepPin, 1000, 5000);
+}
+
 // Index of the closest measured distance
-int getIndexMin(){
+int getIndexMin(int maxIndex){
   int minVal = 500; //Max
   int iMinVal = -1;
   
-  for(int i=0; i<stepsInFullTurn; i++){
-    if( !noCylinder[i] && (measurements[i] < minVal) ){
+  for(int i=0; i<maxIndex; i++){
+    if( !noCylinder[i] && (measurements[i] > 0) && (measurements[i] < minVal) ){
       iMinVal = i;
       minVal = measurements[i];
     }
