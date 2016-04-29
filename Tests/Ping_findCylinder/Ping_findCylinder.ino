@@ -38,8 +38,8 @@ void loop(){
   stepsToCylinder = findCylinder();
   Serial.println("Cylinder at index: "+String(stepsToCylinder));
   tone(beepPin, 2000, 500);
-  for(int i=0; i<stepsToCylinder; i++){
-    rotateStep(counterClockwise);
+  for(int i=0; i<stepsInFullTurn-stepsToCylinder; i++){
+    rotateStep(clockwise);
   }
   tone(beepPin, 5000, 500);
   while(measurePingDist()>10){
