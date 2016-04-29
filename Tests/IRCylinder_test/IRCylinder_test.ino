@@ -22,21 +22,8 @@ void setup() {
 void loop() {
   float irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);         // Measure distance
   float irDistRight = irDistance(irLEDPinRight, irRecPinRight);
-  digitalWrite(statusLedPinLeft, LOW);
-  digitalWrite(statusLedPinRight, LOW);
+
   
-  
-  if(irDistLeft < 0.8){
-      digitalWrite(statusLedPinLeft, HIGH);
-    }
-  
-  if(irDistRight < 0.8){
-       digitalWrite(statusLedPinRight, HIGH); 
-    }
-  
-  Serial.print(irDistLeft);
-  Serial.print("  ");
-  Serial.println(irDistRight); 
 
 }
 

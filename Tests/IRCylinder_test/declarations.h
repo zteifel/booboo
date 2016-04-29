@@ -15,11 +15,5 @@ int irOptFreq = 38000;
 int irFreqStep = 5000;
 int nbrIRDistZones = (irMaxFreq-irOptFreq)/irFreqStep+1;
 
-// Status LEDs
-int statusLedPinLeft = 7;
-int statusLedPinRight = 6;
-
-
-
 
 #endif
