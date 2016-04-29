@@ -6,8 +6,9 @@
 Servo servoLeft;
 Servo servoRight;
 
-const int pingPin = 8;
-const int stepsInFullTurn = 25;
+const int pingPin = 6;
+const int beepPin = 7;
+const int stepsInFullTurn = 38;
 const int discardCylDist = 65;
 const int horizonDist = 300;
 const bool clockwise = true;
@@ -22,7 +23,7 @@ void setup() {
   // initialize serial communication:
   Serial.begin(9600);
   
-  tone(4, 2000, 500);
+  tone(beepPin, 2000, 500);
   servoLeft.attach(13);
   servoRight.attach(12);
 
@@ -31,11 +32,18 @@ void setup() {
 
 void loop(){
   measure();
+  tone(beepPin, 2000, 500);
   Serial.println(arrayToString(measurements,stepsInFullTurn));
   delay(1000);
   stepsToCylinder = findCylinder();
+  Serial.println("Cylinder at index: "+String(stepsToCylinder));
+  tone(beepPin, 2000, 500);
   for(int i=0; i<stepsToCylinder; i++){
     rotateStep(counterClockwise);
+  }
+  tone(beepPin, 5000, 500);
+  while(measurePingDist()>10){
+    moveForward();
   }
   delay(4000);
 }
@@ -46,6 +54,8 @@ void measure(){
   for(int i=0; i<stepsInFullTurn; i++){ 
     rotateStep(counterClockwise);
     int m = measurePingDist();
+    
+    Serial.println("Measured: "+String(m));
     measurements[i] = m;
     if(m > discardCylDist) // TODO Should be "m > discardCylDist"?
       noCylinder[i] = true;
@@ -87,11 +97,11 @@ long measurePingDist(){
 // Rotates one step clockwise or counter-clockwise
 void rotateStep(bool clockwise) {
   if(clockwise){
-    servoLeft.writeMicroseconds(1700);
-    servoRight.writeMicroseconds(1700);
+    servoLeft.writeMicroseconds(1600);
+    servoRight.writeMicroseconds(1600);
   } else {
-    servoLeft.writeMicroseconds(1300);
-    servoRight.writeMicroseconds(1300);
+    servoLeft.writeMicroseconds(1400);
+    servoRight.writeMicroseconds(1400);
   }
   delay(100);
   stopMovement();
@@ -102,6 +112,10 @@ void rotateStep(bool clockwise) {
 void stopMovement(){
   servoLeft.writeMicroseconds(1500);
   servoRight.writeMicroseconds(1500);
+}
+void moveForward(){
+  servoLeft.writeMicroseconds(1700);
+  servoRight.writeMicroseconds(1300);
 }
 
 long microsecondsToCentimeters(long microseconds){
@@ -133,10 +147,11 @@ int findCylinder(){
 
   while(true){
     int nearestIndex = getIndexMin();
+    
+    Serial.println("Nearest index found: "+String(nearestIndex));
     if(nearestIndex == -1){
       return getIndexOfLargestOpenInterval();
     }
-    
     int iL = prevIndex(nearestIndex,l);
     int iR = nextIndex(nearestIndex,l);
     int intervalLength = 0;
@@ -150,10 +165,13 @@ int findCylinder(){
       intervalLength++;
     }
 
+    
+    Serial.println("intervalLength: "+String(intervalLength));
+
     if(intervalLength <= 5){
       return iL<iR ? (iL + iR)/2 : ((iL + iR+l)/2)%l;
     } else {
-      for(int i=iL; i<iR; i++){
+      for(int i=iL; i<iR; i=nextIndex(i,l)){
         noCylinder[i] = true; 
       }
     }
