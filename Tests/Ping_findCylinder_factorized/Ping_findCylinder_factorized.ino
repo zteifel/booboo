@@ -13,6 +13,7 @@ Servo servoRight;
 
 const int discardCylDist = 65;
 const int horizonDist = 300;
+const int extraSwipeSteps = 3;
 
 int  measurements[stepsInFullTurn];
 int  currentIndex = 0;
@@ -37,12 +38,17 @@ void loop(){
   rotateStep(servoLeft, servoRight, counterClockwise);
   int m = measurePingDist();
   
-  Serial.println(arrayToString(measurements, stepsInFullTurn));
+  Serial.println(String(currentIndex)+"\t"+arrayToString(measurements, stepsInFullTurn));
   measurements[currentIndex] = m;
-  if(m > discardCylDist)
+  if(m > discardCylDist){
     noCylinder[currentIndex] = true;
-  int cyl = findCylinder(currentIndex);
+  }
+  
+  int cyl = -1;
+  if(currentIndex >= extraSwipeSteps)
+    cyl = findCylinder(currentIndex-extraSwipeSteps);
   if(cyl != -1){
+    cyl += extraSwipeSteps;
     Serial.println("found cyl "+String(cyl)+" steps away");
     while(cyl--){
       rotateStep(servoLeft, servoRight, clockwise);
@@ -54,8 +60,13 @@ void loop(){
     }
     stopMovement(servoLeft, servoRight);
     beep();
-    delay(5000);
+    resetMeasurements();
+    delay(5000);  
   }
+}
+void resetMeasurements(){
+    currentIndex=0;
+    for(int i=0;i<stepsInFullTurn;i++) {measurements[i]=0; noCylinder[i]=false;}
 }
 
 // Determines the index of the best cylinder candidate
@@ -66,8 +77,6 @@ void loop(){
 // getIndexOfLargestOpenInterval to get a free new direction
 // to explore.
 int findCylinder(int maxIndex){
-  if(maxIndex < 10)
-    return -1;
   const int l = stepsInFullTurn;
 
   while(true){
@@ -100,7 +109,7 @@ int findCylinder(int maxIndex){
     
     Serial.println("intervalLength: "+String(intervalLength));
 
-    if(intervalLength <= 5){ // TODO Experimenting with the threshold
+    if(couldIntervalBeCylinder(intervalLength, measurements[nearestIndex])){ 
       return maxIndex-(iL + iR)/2;
     } else {
       for(int i=iL; i<iR; i=nextIndex(i,l)){ // TODO consider the edges
@@ -108,6 +117,14 @@ int findCylinder(int maxIndex){
       }
     }
   }
+}
+
+bool couldIntervalBeCylinder(int intervalLength, int intervalDist){
+  // TODO Experimenting with the condition, use intervalDist
+  return intervalLength <= 5;
+}
+bool equalWithinMargin(int val1, int val2, double margin){
+  return abs(val1-val2) < margin;
 }
 
 // Index of the broadest open horizon.
