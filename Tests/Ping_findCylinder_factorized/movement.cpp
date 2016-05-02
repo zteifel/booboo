@@ -1,5 +1,6 @@
 
 #include "movement.h"
+#include "declarations.h"
 #include <Servo.h>
 #include "Arduino.h"
 
@@ -27,3 +28,18 @@ void moveForward(Servo servoLeft, Servo servoRight){
   servoLeft.writeMicroseconds(1700);
   servoRight.writeMicroseconds(1300);
 }
+
+void moveALittleInRandDir(Servo servoLeft, Servo servoRight){
+  randomSeed(analogRead(A0));
+  int r = random(stepsInFullTurn/2);
+  
+  randomSeed(analogRead(A0));
+  bool dir = (random()%2);
+  while(r--){
+    rotateStep(servoLeft,servoRight,dir);
+  }
+  moveForward(servoLeft, servoRight);
+  delay(2000);
+  stopMovement(servoLeft, servoRight);
+}
+

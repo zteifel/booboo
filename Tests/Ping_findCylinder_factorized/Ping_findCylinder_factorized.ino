@@ -85,7 +85,17 @@ int findCylinder(int maxIndex){
     Serial.println("Nearest index found: "+String(nearestIndex));
     if(nearestIndex == -1){
       //return getIndexOfLargestOpenInterval();
+      
+      //return -1;
+
+      //If we have checked all indicies
+      if(currentIndex == stepsInFullTurn-1){
+        moveALittleInRandDir(servoLeft, servoRight);
+        resetMeasurements();
+      }
       return -1;
+      //No index can be cylinder, return random
+
     }
     int iL = nearestIndex-1;
     int iR = nearestIndex+1;
@@ -105,7 +115,6 @@ int findCylinder(int maxIndex){
         return -1; //Should continue measuring
       }
     }
-
     
     Serial.println("intervalLength: "+String(intervalLength));
 
