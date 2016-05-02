@@ -40,8 +40,8 @@ int buttonState;
 bool buttonPressed;
 int numberOfStates = 4;
 int currentState = 0;
-bool foundBlack = false;
-bool foundCylinder = false;
+bool foundBlack;
+bool foundCylinder;
 int galvReading = 0;
 
 
@@ -87,6 +87,8 @@ void loop() {
   if (currentState == 0) {
     // Initilization, robot stays idle
     stopMovement();
+    bool foundBlack = false;
+    bool foundCylinder = false;
     
   } else if (currentState == 1) {
     // Stop on black
