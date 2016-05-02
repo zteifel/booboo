@@ -35,11 +35,16 @@ void moveALittleInRandDir(Servo servoLeft, Servo servoRight){
   
   randomSeed(analogRead(A0));
   bool dir = (random()%2);
-  while(r--){
-    rotateStep(servoLeft,servoRight,dir);
+
+  moveALittleInDir(servoLeft,servoRight,r,dir,2000);
+}
+
+void moveALittleInDir(Servo servoLeft, Servo servoRight, int stepsToRotate, bool clockwise, int timeToMove){
+  while(stepsToRotate--){
+    rotateStep(servoLeft,servoRight,clockwise);
   }
   moveForward(servoLeft, servoRight);
-  delay(2000);
+  delay(timeToMove);
   stopMovement(servoLeft, servoRight);
 }
 

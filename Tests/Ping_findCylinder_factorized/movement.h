@@ -12,5 +12,6 @@ void rotateStep(Servo servoLeft, Servo servoRight, bool clockwise);
 void stopMovement(Servo servoLeft, Servo servoRight);
 void moveForward(Servo servoLeft, Servo servoRight);
 void moveALittleInRandDir(Servo servoLeft, Servo servoRight);
+void moveALittleInDir(Servo servoLeft, Servo servoRight, int stepsToRotate, bool clockwise, int timeToMove);
 
 #endif

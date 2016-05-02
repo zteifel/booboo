@@ -90,7 +90,9 @@ int findCylinder(int maxIndex){
 
       //If we have checked all indicies
       if(currentIndex == stepsInFullTurn-1){
-        moveALittleInRandDir(servoLeft, servoRight);
+        int iLargest = getIndexOfLargestOpenInterval();
+        int nSteps = currentIndex - iLargest;
+        moveALittleInDir(servoLeft, servoRight, nSteps, clockwise, 2000);
         resetMeasurements();
       }
       return -1;
@@ -131,9 +133,6 @@ int findCylinder(int maxIndex){
 bool couldIntervalBeCylinder(int intervalLength, int intervalDist){
   // TODO Experimenting with the condition, use intervalDist
   return intervalLength <= 5;
-}
-bool equalWithinMargin(int val1, int val2, double margin){
-  return abs(val1-val2) < margin;
 }
 
 // Index of the broadest open horizon.
