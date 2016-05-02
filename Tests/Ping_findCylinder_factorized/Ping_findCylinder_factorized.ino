@@ -14,6 +14,7 @@ Servo servoRight;
 const int discardCylDist = 65;
 const int horizonDist = 300;
 const int extraSwipeSteps = 3;
+const int noCylFound = -1;
 
 int  measurements[stepsInFullTurn];
 int  currentIndex = 0;
@@ -44,10 +45,10 @@ void loop(){
     noCylinder[currentIndex] = true;
   }
   
-  int cyl = -1;
+  int cyl = noCylFound;
   if(currentIndex >= extraSwipeSteps)
     cyl = findCylinder(currentIndex-extraSwipeSteps);
-  if(cyl != -1){
+  if(cyl != noCylFound){
     cyl += extraSwipeSteps;
     Serial.println("found cyl "+String(cyl)+" steps away");
     while(cyl--){
@@ -83,12 +84,9 @@ int findCylinder(int maxIndex){
     int nearestIndex = getIndexMin(measurements, noCylinder, maxIndex);
     
     Serial.println("Nearest index found: "+String(nearestIndex));
-    if(nearestIndex == -1){
-      //return getIndexOfLargestOpenInterval();
-      
-      //return -1;
-
-      //If we have checked all indicies
+    if(nearestIndex == noCylFound){
+      // No cylinder found
+      // If we have checked all indicies, move to a new location
       if(currentIndex == stepsInFullTurn-1){
         int iLargest = getIndexOfLargestOpenInterval();
         int nSteps = currentIndex - iLargest;
