@@ -1,22 +1,29 @@
-int irBeaconPin = A0;
-float irBeaconValue, tmpSum, irBeaconMeanValue;
+int irBeaconPinLeft  = A0;
+int irBeaconPinRight = A1;
+float irBeaconLeftVal, irBeaconRightVal, tmpSum, irBeaconMeanValue;
 int nbrAvRuns = 1;
 
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(9600);
-  pinMode(irBeaconPin,INPUT);
+  pinMode(irBeaconPinLeft, INPUT);
+  pinMode(irBeaconPinRight,INPUT);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  irBeaconMeanValue = 0; tmpSum = 0;
+  int tmpSumLeft = 0;
+  int tmpSumRight = 0;
   for (int k = 1; k<=nbrAvRuns; k++){
-    irBeaconValue = digitalRead(irBeaconPin);
+    irBeaconLeftVal = analogRead(irBeaconPinLeft)*5.0/1024.0;  
+    irBeaconRightVal = analogRead(irBeaconPinRight)*5.0/1024.0;
     //irBeaconValue = irBeaconValue*5/1024;
-    tmpSum += irBeaconValue;
+    tmpSumLeft  += irBeaconLeftVal;
+    tmpSumRight += irBeaconRightVal;
   };
-  irBeaconMeanValue = tmpSum/nbrAvRuns;
-  Serial.println(irBeaconMeanValue);
+  int irBeaconMeanLeft  = tmpSumLeft/nbrAvRuns;
+  int irBeaconMeanRight = tmpSumRight/nbrAvRuns;
+  Serial.println(
+    "Left: "  + String(irBeaconMeanLeft) + "\t" +
+    "Right: " + String(irBeaconMeanRight)
+  );
   delay(100);
 }
