@@ -25,8 +25,8 @@ void reverse() {
 }
 
 void moveForwardSlow() {
-    servoLeft.writeMicroseconds(servoLeftFowardSlow);
-    servoRight.wirteMicroseconds(servoRightForwardSlow);
+    servoLeft.writeMicroseconds(servoLeftForwardSlow);
+    servoRight.writeMicroseconds(servoRightForwardSlow);
 }
 
 
