@@ -13,6 +13,16 @@ void beep() {
   }
 }
 
+void beep2(){
+  tone(beepPin, 1000, 1000);
+  delay(500);
+}
+
+void beep3(){
+  tone(beepPin, 2000, 1000);
+  delay(500);
+}
+
 void error(){
   tone(beepPin, 1000, 5000);
 }

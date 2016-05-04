@@ -12,11 +12,11 @@ Servo servoLeft;
 Servo servoRight;
 
 const int discardCylDist = 65;
-const int horizonDist = 300;
+const int horizonDist = 100;
 const int extraSwipeSteps = 3;
 const int noCylFound = -1;
 const int rotationSpeed = 25;
-const int msInFullTurn = 7000;
+const int msInFullTurn = 8000;
 const int nMeasurements = 30;
 const int msPerStep = msInFullTurn / nMeasurements;
 
@@ -51,11 +51,20 @@ void loop(){
     }
   }
   
+  beep2(); // DEBUG
+  Serial.println("Entering findCylinder"); // DEBUG
+  
   // Run main search algorithm
   int headingIndex = findCylinder();
+  
+  beep3(); // DEBUG
+  
   if(headingIndex == noCylFound){
+    Serial.println("Entering getIndexOfLargestOpenInterval"); // DEBUG
     headingIndex = getIndexOfLargestOpenInterval();
   }
+  
+  Serial.println("Entering rotation"); // DEBUG
   
   // Rotate towards cylinder/large open space
   if(headingIndex != noCylFound){
@@ -104,23 +113,26 @@ bool couldIntervalBeCylinder(int intervalLength, int intervalDist){
 // to explore.
 int findCylinder(){
   while(true){
+    Serial.println("findCylinder: outer loop"); // DEBUG
     int nearestIndex = getIndexMin(measurements, noCylinder, nMeasurements);
     
     if(nearestIndex == noCylFound){
       return -1;
     }
     
-    int iL = nearestIndex-1;
-    int iR = nearestIndex+1;
+    int iL = prevIndex(nearestIndex, nMeasurements);
+    int iR = nextIndex(nearestIndex, nMeasurements);
     int intervalLength = 0;
   
     while(abs(measurements[nearestIndex] - measurements[iL]) < 5){
-      prevIndex(iL, nMeasurements);
+      iL = prevIndex(iL, nMeasurements);
       intervalLength++;
+      Serial.println("findCylinder: inner loop 1"); // DEBUG
     }
     while(abs(measurements[nearestIndex] - measurements[iR]) < 5){
-      nextIndex(iR, nMeasurements);
+      iR = nextIndex(iR, nMeasurements);
       intervalLength++;
+      Serial.println("findCylinder: inner loop 2"); // DEBUG
     }
     
     if(couldIntervalBeCylinder(intervalLength, measurements[nearestIndex])){
@@ -165,7 +177,8 @@ int getIndexOfLargestOpenInterval(){
       iRightLargest = iRight;
     }
     
-    i=iRight;
+    i = nextIndex(iRight, nMeasurements);
+    nbrOfRightChecks++;
     
     // When all points have been examined, continue!
     if(nbrOfRightChecks > nMeasurements){
