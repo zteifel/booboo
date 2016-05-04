@@ -15,6 +15,9 @@ const int irOptFreq = 38000;
 const int irFreqStep = 5000;
 const int nbrIRDistZones = (irMaxFreq-irOptFreq)/irFreqStep+1;
 
+// Constant for random seeding
+//const int randomPin = A0;
+
 // Pins for sonar
 const int pingPin = 6;
 

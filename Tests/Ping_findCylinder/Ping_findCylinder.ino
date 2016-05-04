@@ -1,20 +1,21 @@
 // Test of the ping sensor. Rotates the robot 
 // around and gathers measurements;
 
+#include "declarations.h"
 #include <Servo.h> // Include servo library
-    
+#include "movement.h"
+#include "ping_basic.h"
+#include "beeps.h"
+#include "ping_scan_utils.h"
+
 Servo servoLeft;
 Servo servoRight;
 
-const int pingPin = 6;
-const int beepPin = 7;
-const int stepsInFullTurn = 38;
 const int discardCylDist = 65;
 const int horizonDist = 300;
-const bool clockwise = true;
-const bool counterClockwise = false;
+const int extraSwipeSteps = 3;
+const int noCylFound = -1;
 
-long pingDist;
 int  measurements[stepsInFullTurn];
 int  currentIndex = 0;
 int  noCylinder[stepsInFullTurn];
@@ -35,108 +36,38 @@ void loop(){
   currentIndex ++;
   currentIndex %= stepsInFullTurn;
   
-  rotateStep(counterClockwise);
+  rotateStep(servoLeft, servoRight, counterClockwise);
   int m = measurePingDist();
   
-  Serial.println(arrayToString(measurements, stepsInFullTurn));
+  Serial.println(String(currentIndex)+"\t"+arrayToString(measurements, stepsInFullTurn));
   measurements[currentIndex] = m;
-  if(m > discardCylDist)
+  if(m > discardCylDist){
     noCylinder[currentIndex] = true;
-  int cyl = findCylinder(currentIndex);
-  if(cyl != -1){
+  }
+  
+  int cyl = noCylFound;
+  if(currentIndex >= extraSwipeSteps)
+    cyl = findCylinder(currentIndex-extraSwipeSteps);
+  if(cyl != noCylFound){
+    cyl += extraSwipeSteps;
     Serial.println("found cyl "+String(cyl)+" steps away");
     while(cyl--){
-      rotateStep(clockwise);
+      rotateStep(servoLeft, servoRight, clockwise);
     }
     while(measurePingDist() > 5){
       //.println("Approaching cylinder!! dist:"+String(measurePingDist()));
-      moveForward();
+      moveForward(servoLeft, servoRight);
       delay(500);
     }
-    stopMovement();
+    stopMovement(servoLeft, servoRight);
     beep();
-    delay(5000);
+    resetMeasurements();
+    delay(5000);  
   }
 }
-
-void beep() {
-for (int i=1000; i<2000; i=i*1.02) { tone(beepPin,i,10); delay(20); } for (int i=2000; i>1000; i=i*.98) {
-tone(beepPin,i,10);
-delay(20);
-}
-}
-
-String arrayToString(int array[], int arrayLength)
-{
-  String s = "[ ";
-  for(int i=0; i < arrayLength; i++){
-    s+=String(array[i])+" ";
-  }
-  return s + "]";
-}
-
-// Perform measurement with ping sensor
-// Returns distance in cm
-long measurePingDist(){
-  long duration, cm;
-  // The PING))) is triggered by a HIGH pulse of 2 or more microseconds.
-  // Give a short LOW pulse beforehand to ensure a clean HIGH pulse:
-  pinMode(pingPin, OUTPUT);
-  digitalWrite(pingPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(pingPin, HIGH);
-  delayMicroseconds(5);
-  digitalWrite(pingPin, LOW);
-
-  // The same pin is used to read the signal from the PING))): a HIGH
-  // pulse whose duration is the time (in microseconds) from the sending
-  // of the ping to the reception of its echo off of an object.
-  pinMode(pingPin, INPUT);
-  duration = pulseIn(pingPin, HIGH);
-
-  // convert the time into a distance
-  return microsecondsToCentimeters(duration);
-}
-
-// Rotates one step clockwise or counter-clockwise
-void rotateStep(bool clockwise) {
-  if(clockwise){
-    servoLeft.writeMicroseconds(1600);
-    servoRight.writeMicroseconds(1600);
-  } else {
-    servoLeft.writeMicroseconds(1400);
-    servoRight.writeMicroseconds(1400);
-  }
-  delay(100);
-  stopMovement();
-  delay(100);
-}
-
-// Halts robot
-void stopMovement(){
-  servoLeft.writeMicroseconds(1500);
-  servoRight.writeMicroseconds(1500);
-}
-void moveForward(){
-  servoLeft.writeMicroseconds(1700);
-  servoRight.writeMicroseconds(1300);
-}
-
-long microsecondsToCentimeters(long microseconds){
-  // The speed of sound is 340 m/s or 29 microseconds per centimeter.
-  // The ping travels out and back, so to find the distance of the
-  // object we take half of the distance travelled.
-  return microseconds / 29 / 2;
-}
-
-// Gives previous index with wrap-around
-int prevIndex(int index, int arrayLength){
-  return (index+arrayLength-1) % arrayLength;
-}
-
-// Gives next index with wrap-around
-int nextIndex(int index, int arrayLength){
-  return (index+1) % arrayLength;
+void resetMeasurements(){
+    currentIndex=0;
+    for(int i=0;i<stepsInFullTurn;i++) {measurements[i]=0; noCylinder[i]=false;}
 }
 
 // Determines the index of the best cylinder candidate
@@ -147,17 +78,24 @@ int nextIndex(int index, int arrayLength){
 // getIndexOfLargestOpenInterval to get a free new direction
 // to explore.
 int findCylinder(int maxIndex){
-  if(maxIndex < 10)
-    return -1;
   const int l = stepsInFullTurn;
 
   while(true){
-    int nearestIndex = getIndexMin(maxIndex);
+    int nearestIndex = getIndexMin(measurements, noCylinder, maxIndex);
     
     Serial.println("Nearest index found: "+String(nearestIndex));
-    if(nearestIndex == -1){
-      //return getIndexOfLargestOpenInterval();
+    if(nearestIndex == noCylFound){
+      // No cylinder found
+      // If we have checked all indicies, move to a new location
+      if(currentIndex == stepsInFullTurn-1){
+        int iLargest = getIndexOfLargestOpenInterval();
+        int nSteps = currentIndex - iLargest;
+        moveALittleInDir(servoLeft, servoRight, nSteps, clockwise, 2000);
+        resetMeasurements();
+      }
       return -1;
+      //No index can be cylinder, return random
+
     }
     int iL = nearestIndex-1;
     int iR = nearestIndex+1;
@@ -177,11 +115,10 @@ int findCylinder(int maxIndex){
         return -1; //Should continue measuring
       }
     }
-
     
     Serial.println("intervalLength: "+String(intervalLength));
 
-    if(intervalLength <= 5){
+    if(couldIntervalBeCylinder(intervalLength, measurements[nearestIndex])){ 
       return maxIndex-(iL + iR)/2;
     } else {
       for(int i=iL; i<iR; i=nextIndex(i,l)){ // TODO consider the edges
@@ -191,22 +128,9 @@ int findCylinder(int maxIndex){
   }
 }
 
-void error(){
-  tone(beepPin, 1000, 5000);
-}
-
-// Index of the closest measured distance
-int getIndexMin(int maxIndex){
-  int minVal = 500; //Max
-  int iMinVal = -1;
-  
-  for(int i=0; i<maxIndex; i++){
-    if( !noCylinder[i] && (measurements[i] > 0) && (measurements[i] < minVal) ){
-      iMinVal = i;
-      minVal = measurements[i];
-    }
-  }
-  return iMinVal;
+bool couldIntervalBeCylinder(int intervalLength, int intervalDist){
+  // TODO Experimenting with the condition, use intervalDist
+  return intervalLength <= 5;
 }
 
 // Index of the broadest open horizon.
@@ -253,5 +177,3 @@ int getIndexOfLargestOpenInterval(){
     (iRightLargest + iRightLargest)/2 : 
     ((iRightLargest + iRightLargest + stepsInFullTurn)/2) % stepsInFullTurn;
 }
-
-
