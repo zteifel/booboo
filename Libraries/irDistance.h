@@ -1,35 +1,32 @@
+
+#include "Arduino.h"
+
 #ifndef IRDISTANCE_H
 #define IRDISTANCE_H
-#include "Arduino.h"
+
 
 float irDistance(int irLedPin, int irReceivePin)
 { 
-  float nbrAvgIrRuns = 5.0;
-  float meanDistZone;
-  float sumDistZones = 0.0;
-  
-  for(int k = 1; k<= nbrAvgIrRuns; k++) { 
-    float distance = 0.0;
+  irSumDistZones = 0.0;
+  for(int k = 1; k<= irNbrAvgRuns ; k++) { 
+    irTmpDist = 0.0;
     for(long f = irOptFreq; f <= irMaxFreq; f += irFreqStep) {
-      distance += irDetect(irLedPin, irReceivePin, f);
+      irTmpDist += irDetect(irLedPin, irReceivePin, f);
     }
-    sumDistZones += distance;
+    irSumDistZones  += irTmpDist;
   }
-  meanDistZone = sumDistZones/nbrAvgIrRuns;
+  irMeanDistZone = irSumDistZones/irNbrAvgRuns;
 
-  return meanDistZone/nbrIRDistZones; // Normalize to 1
+  return irMeanDistZone/irNbrDistZones; // Normalize to 1
 }
 
-
-// IR Detection function
-
-int irDetect(int irLedPin, int irReceiverPin, long frequency)
+float irDetect(int irLedPin, int irReceiverPin, long frequency)
 {
-  tone(irLedPin, frequency, 8);              // IRLED active for at least 1 ms
+  tone(irLedPin, frequency, 10);              // IRLED 38 kHz for at least 1 ms
   delay(1);                                  // Wait 1 ms
-  int ir = digitalRead(irReceiverPin);       // IR receiver
-  delay(1);                                  // Down time
-  return ir;                                 // Return 1
-}    
+  irDetected = digitalRead(irReceiverPin);       // IR receiver -> ir variable
+  delay(1);                                  // Down time before recheck
+  return irDetected;                                 // Return 1 no detect, 0 detect
+}
 
 #endif
