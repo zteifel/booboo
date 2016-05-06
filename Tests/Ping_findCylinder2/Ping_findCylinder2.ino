@@ -1,15 +1,12 @@
 // Test of the ping sensor. Rotates the robot 
 // around and gathers measurements;
 
-#include "declarations.h"
 #include <Servo.h> // Include servo library
+#include "declarations.h"
 #include "movement.h"
 #include "ping_basic.h"
 #include "beeps.h"
 #include "ping_scan_utils.h"
-
-Servo servoLeft;
-Servo servoRight;
 
 const int discardCylDist = 65;
 const int horizonDist = 100;
@@ -37,12 +34,12 @@ void loop(){
   resetMeasurements();
   
   // Rotate continually and measure
-  rotate(servoLeft, servoRight, counterClockwise, rotationSpeed);
+  rotate(counterClockwise, rotationSpeed);
   for(int i=0; i<nMeasurements; i++){
     measurements[i] = measurePingDist();
     delay(msPerStep-7); // -7 since this is the delay in the measurement
   }
-  stopMovement(servoLeft, servoRight);
+  stopMovement();
   
   // Update the auxiliary array
   for(int i=0; i<nMeasurements; i++){
@@ -69,23 +66,23 @@ void loop(){
   // Rotate towards cylinder/large open space
   if(headingIndex != noCylFound){
     if(headingIndex <= nMeasurements/2){
-      rotate(servoLeft, servoRight, counterClockwise, rotationSpeed);
+      rotate(counterClockwise, rotationSpeed);
       delay(msPerStep * headingIndex);
     }else{
-      rotate(servoLeft, servoRight, clockwise, rotationSpeed);
+      rotate(clockwise, rotationSpeed);
       delay(msPerStep * (nMeasurements - headingIndex));
     }
   }
   
   // Move forward a while or until collision
-  moveForward(servoLeft, servoRight);
+  moveForward();
   for(int i=0; i < 5000/100; i++){
     if(measurePingDist() <= 5){
       break;
     }
     delay(100);
   }
-  stopMovement(servoLeft, servoRight);
+  stopMovement();
   
   // Signal done and wait
   beep();
