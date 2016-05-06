@@ -43,13 +43,16 @@ void loop(){
 
   //////////////////////////////
   // Run main search algorithm
-  int headingIndex = findCylinder();
-  
+  int cylinderIndex = findCylinder();
+  int headingIndex;
   beep3(); // DEBUG
   
-  if(headingIndex == noCylFound){
+  if(cylinderIndex == noCylFound){
     Serial.println("Entering getIndexOfLargestOpenInterval"); // DEBUG
     headingIndex = getIndexOfLargestOpenInterval();
+  }
+  else{
+    headingIndex = cylinderIndex;
   }
 
   Serial.println("Entering rotation"); // DEBUG
