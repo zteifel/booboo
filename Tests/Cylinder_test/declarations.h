@@ -30,6 +30,17 @@ const int rightServoPin = 12;
 
 // Pins for sonar
 const int pingPin = 6;
+const int discardCylDist = 65;
+const int horizonDist = 100;
+const int extraSwipeSteps = 3;
+const int noCylFound = -1;
+const int rotationSpeed = 25;
+const int msInFullTurn = 8000;
+const int nMeasurements = 30;
+const int msPerStep = msInFullTurn / nMeasurements;
+int  measurements[nMeasurements];
+int  noCylinder[nMeasurements];
+int  stepsToCylinder;
 
 // Buzzer pin
 const int beepPin = 7;
@@ -43,7 +54,7 @@ const int servoRightBackward    = 1600;
 const int servoLeftForwardSlow  = 1530;
 const int servoRightForwardSlow = 1470;
 const int servoStop             = 1500;
-const float irDistThreshold     = 0.5;
+const float irDistThreshold     = 0.6;
 
 Servo servoLeft;
 Servo servoRight;
@@ -52,6 +63,7 @@ Servo servoRight;
 int buttonPin = 8;  // Status speaker, resistor?
 const int GALV_PIN = 10;
 int galvReading = 0;
+int roamingTime = 3; // Seconds
 
 bool clockwise        = true;
 bool counterClockwise = false;
