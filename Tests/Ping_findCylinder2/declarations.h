@@ -47,7 +47,21 @@ Servo servoRight;
 // Other
 int speakerPin = 7; // Status speaker, resistor?
 int buttonPin = 8;  // Status speaker, resistor?
+
+// Sonar
 int ultraSoundPin = 6;
+const int discardCylDist = 65;
+const int horizonDist = 100;
+const int extraSwipeSteps = 3;
+const int noCylFound = -1;
+const int rotationSpeed = 25;
+const int msInFullTurn = 8000;
+const int nMeasurements = 30;
+const int msPerStep = msInFullTurn / nMeasurements;
+int  measurements[nMeasurements];
+int  noCylinder[nMeasurements];
+int  stepsToCylinder;
+
 
 bool clockwise        = true;
 bool counterClockwise = false;
