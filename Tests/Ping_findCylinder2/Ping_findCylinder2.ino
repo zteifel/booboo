@@ -23,8 +23,6 @@ int  stepsToCylinder;
 
 void setup() {
   Serial.begin(9600);
-  pinMode(pingPin, OUTPUT);
-  pinMode(pingPin, INPUT);
   tone(beepPin, 2000, 500);
   servoLeft.attach(13);
   servoRight.attach(12);
