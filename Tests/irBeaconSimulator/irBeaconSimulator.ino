@@ -1,4 +1,4 @@
-int irLedPin = 8;
+int irLedPin = 7;
 int frequency = 37500;
 int simDelayLimit = 150;
 
