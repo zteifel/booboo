@@ -11,6 +11,7 @@
 
 bool foundCylinder = false;
 int currentState;
+unsigned long time;
 
 
 void setup() {
@@ -100,10 +101,20 @@ void loop() {
         delay(msPerStep * (nMeasurements - headingIndex));
       }
     }
+    
+    //////////////////////////////
+    // Set the timer for state 2
+    if (currentState == 2){
+      time = millis();
+    }
   
   } else if (currentState == 2) {
     // State 2: Move towards a cylinder using IR to correct the path,
     // stop the robot once the element gets a connection.
+    
+    if(millis() - time > msMoveForward){
+      currentState = 1;
+    }
 
     irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);         // Measure distance
     irDistRight = irDistance(irLEDPinRight, irRecPinRight);
@@ -120,12 +131,13 @@ void loop() {
       } else if (irDistRight < 0.8) {
         turnRight();
       } else {
-      moveForwardSlow();
+        moveForwardSlow();
       }
     }
     
   } else if (currentState == 3) {
     // Robot stays idle.
+    stopMovement();
   }
 }
 

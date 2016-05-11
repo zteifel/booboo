@@ -30,11 +30,15 @@ int findCylinder(){
     while(abs(measurements[nearestIndex] - measurements[iL]) < 5){
       iL = prevIndex(iL, nMeasurements);
       intervalLength++;
+      if(iL == iR)
+        break;
       Serial.println("findCylinder: inner loop 1"); // DEBUG
     }
     while(abs(measurements[nearestIndex] - measurements[iR]) < 5){
       iR = nextIndex(iR, nMeasurements);
       intervalLength++;
+      if(iL == iR)
+        break;
       Serial.println("findCylinder: inner loop 2"); // DEBUG
     }
     
@@ -59,6 +63,8 @@ int getIndexOfLargestOpenInterval(){
   int iRight;
   int i=-1;
   while(true) {
+
+    Serial.println("Largest open intervall");
     //Take step into possible new intervall:
     iLeft = nextIndex(i,nMeasurements);
     
@@ -66,13 +72,19 @@ int getIndexOfLargestOpenInterval(){
     
     int intervalWidth = 0;
     while(measurements[iLeft] > horizonDist){
+      //Serial.println("First loop");
       iLeft = prevIndex(iLeft,nMeasurements);
       intervalWidth++;
+      if(iLeft==iRight)
+        break;
     }
     while(measurements[iRight] > horizonDist){
+      //Serial.println("Second loop");
       iRight = nextIndex(iRight,nMeasurements);
       intervalWidth++;
       nbrOfRightChecks++;
+      if(iLeft==iRight)
+        break;
     }
     if(intervalWidth > lenLargest){
       lenLargest = intervalWidth;
