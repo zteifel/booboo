@@ -28,7 +28,7 @@ void setup() {
 
   Serial.flush();
 
-  currentState = 0;
+  currentState = 1;
 
 }
 
