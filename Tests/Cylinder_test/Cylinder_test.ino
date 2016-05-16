@@ -1,5 +1,6 @@
 
 #include <Servo.h> // Include servo library
+#include <EEPROM.h>
 #include "declarations.h"
 #include "movement.h"
 #include "ping_basic.h"
@@ -8,6 +9,8 @@
 #include "ping_analyze_scan.h"
 #include "irDistance.h"
 #include "Avoidance.h"
+#include "IR_beacon_nav.h"
+#include "onBlackPaper.h"
 
 bool foundCylinder = false;
 int currentState;
@@ -23,17 +26,26 @@ void setup() {
   
   pinMode(irRecPinLeft, INPUT);  pinMode(irLEDPinLeft, OUTPUT);   // IR LED & Receiver
   pinMode(irRecPinRight, INPUT);  pinMode(irLEDPinRight, OUTPUT);
-
+  
+  pinMode(IR_BEACON_L_PIN, INPUT);
+  pinMode(IR_BEACON_R_PIN,INPUT);
+  
   pinMode(GALV_PIN, INPUT);
+  pinMode(stopOnBlackPin, INPUT);
 
   Serial.flush();
 
-  currentState = 1;
+  currentState = 4;
 
 }
 
 void loop() {
-
+  Serial.println(currentState); // DEBUG
+  
+  // MEASURE DATA
+  irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);         // Measure distance
+  irDistRight = irDistance(irLEDPinRight, irRecPinRight);
+  
   if (currentState == 0) {
     // State 0: Move forward a set number of steps and then go to state 1. Avoid any objects.
 
@@ -136,8 +148,31 @@ void loop() {
     }
     
   } else if (currentState == 3) {
-    // Robot stays idle.
+    // Collect cylinder
+    beep3(); // DEBUG
+    delay(500);
+    //stopMovement();
+    
+    currentState = 4;
+  } else if (currentState == 4) {
+    // Go towards beacon
+
+    steerTowardsBeacon();
+    Serial.println("Beacon loop");
+    
+    while(!onBlackPaper()) {
+      avoidObjects(irDistLeft,irDistRight);
+      checkForBeacon(100);
+      steerTowardsBeacon();
+    }
+    Serial.println("Stopped on black");
+    currentState = 5;
+    
+  } else if (currentState == 5) {
+    // Leave cylinder
     stopMovement();
+    delay(2000);
+    currentState = 4;  // For now
   }
 }
 

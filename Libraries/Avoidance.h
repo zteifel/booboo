@@ -16,7 +16,7 @@ void avoidObjects(float irDistLeft, float irDistRight) {
     turnLeft();
     Serial.println("Left");
   } else {
-    moveForward();
+    // moveForward();
   }
 }
 

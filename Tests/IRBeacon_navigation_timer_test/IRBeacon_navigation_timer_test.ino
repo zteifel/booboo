@@ -14,7 +14,7 @@ int servoRightForward = 1470;
 int servoRightBackward = 1530;
 
 const float analogConversionFactor = 5.0 / 1024.0;
-float beaconLeftVal, beaconRightVal, tmpSum, irBeaconMeanValue;
+float beaconLeftVal, beaconRightVal;
 float curTime, beaconLeftTimer, beaconRightTimer;
 const float beaonTimerTreshold = 2000;
 
@@ -25,7 +25,7 @@ void setup() {
   servoLeft.attach(SERVO_L_PIN);
   servoRight.attach(SERVO_R_PIN);
 
-  //initialBeaconScan();
+  initialBeaconScan();
 }
 
 void loop() {
