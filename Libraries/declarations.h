@@ -67,6 +67,7 @@ const float irDistThreshold     = 0.6;
 
 Servo servoLeft;
 Servo servoRight;
+Servo servoArm;
 
 // IR Beacon
 const float analogConversionFactor = 5.0 / 1024.0;
@@ -82,5 +83,9 @@ int galvReading = 0;
 
 const bool clockwise        = true;
 const bool counterClockwise = false;
+
+const int ARM_SERVO_PIN = 11;
+const int armUp = 90;
+const int armDown = 30;
 
 #endif

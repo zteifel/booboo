@@ -32,9 +32,13 @@ void setup() {
   
   pinMode(GALV_PIN, INPUT);
   pinMode(stopOnBlackPin, INPUT);
+  
+  servoArm.attach(ARM_SERVO_PIN);
 
   Serial.flush();
 
+  armServo.write(armUp); // Set the arm in diagonal upright position
+  
   currentState = 4;
 
 }
@@ -149,9 +153,10 @@ void loop() {
     
   } else if (currentState == 3) {
     // Collect cylinder
-    beep3(); // DEBUG
+    stopMovement();
     delay(500);
-    //stopMovement();
+    servoArm.write(armDown);
+    delay(500);
     
     currentState = 4;
   } else if (currentState == 4) {
@@ -171,6 +176,8 @@ void loop() {
   } else if (currentState == 5) {
     // Leave cylinder
     stopMovement();
+    delay(500);
+    servoArm.write(armUp);
     delay(2000);
     currentState = 4;  // For now
   }
