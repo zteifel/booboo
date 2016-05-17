@@ -84,8 +84,8 @@ float curTime, beaconLeftTimer, beaconRightTimer;
 
 
 // Other
-const int msMoveTowardCylinder = 10*1000;
-const int roamingTime = 10; // Seconds
+const int msMoveTowardCylinder = 4*1000;
+const int roamingTime = 4; // Seconds
 int galvReading = 0;
 
 const bool clockwise        = true;
