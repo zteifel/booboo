@@ -40,16 +40,9 @@ void setup() {
 }
 
 void loop() {
-/*
-  if(onBlackPaper()){
-    stopMovement();
-  }else{
-    moveForward();
-  }
-  delay(500);
-*/
 
-  Serial.println(currentState); // DEBUG
+
+  // Serial.println(currentState); // DEBUG
   
   // MEASURE DATA
   irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);         // Measure distance
