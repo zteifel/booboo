@@ -15,8 +15,6 @@ void avoidObjects(float irDistLeft, float irDistRight) {
   } else if (irDistRight < irDistThreshold) {
     turnLeft();
     Serial.println("Left");
-  } else {
-    moveForward();
   }
 }
 

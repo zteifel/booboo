@@ -1,5 +1,6 @@
 
 #include <Servo.h> // Include servo library
+#include <EEPROM.h>
 #include "declarations.h"
 #include "movement.h"
 #include "ping_basic.h"
@@ -8,9 +9,12 @@
 #include "ping_analyze_scan.h"
 #include "irDistance.h"
 #include "Avoidance.h"
+#include "IR_beacon_nav.h"
+#include "onBlackPaper.h"
 
 bool foundCylinder = false;
 int currentState;
+unsigned long time;
 
 
 void setup() {
@@ -22,17 +26,30 @@ void setup() {
   
   pinMode(irRecPinLeft, INPUT);  pinMode(irLEDPinLeft, OUTPUT);   // IR LED & Receiver
   pinMode(irRecPinRight, INPUT);  pinMode(irLEDPinRight, OUTPUT);
-
+  
+  pinMode(IR_BEACON_L_PIN, INPUT);
+  pinMode(IR_BEACON_R_PIN,INPUT);
+  
   pinMode(GALV_PIN, INPUT);
+  pinMode(stopOnBlackPin, INPUT);
+  
+  servoArm.attach(ARM_SERVO_PIN);
 
   Serial.flush();
 
-  currentState = 0;
+  armServo.write(armUp); // Set the arm in diagonal upright position
+  
+  currentState = 4;
 
 }
 
 void loop() {
-
+  Serial.println(currentState); // DEBUG
+  
+  // MEASURE DATA
+  irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);         // Measure distance
+  irDistRight = irDistance(irLEDPinRight, irRecPinRight);
+  
   if (currentState == 0) {
     // State 0: Move forward a set number of steps and then go to state 1. Avoid any objects.
 
@@ -104,28 +121,66 @@ void loop() {
   } else if (currentState == 2) {
     // State 2: Move towards a cylinder using IR to correct the path,
     // stop the robot once the element gets a connection.
-
-    irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);         // Measure distance
-    irDistRight = irDistance(irLEDPinRight, irRecPinRight);
+    time = millis();
+    foundCylinder = false;
     
-    if (foundCylinder) {
-      stopMovement();
-      currentState = 3;
-    } else {
-      galvReading = digitalRead(GALV_PIN);
-      if (galvReading == HIGH) {
-        foundCylinder = true;
-      } else if (irDistLeft < 0.8) {
-        turnLeft();
-      } else if (irDistRight < 0.8) {
-        turnRight();
+    while(true){
+    
+      if(millis() - time > msMoveForward){
+        currentState = 1;
+        break;
+      }
+
+      irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);         // Measure distance
+      irDistRight = irDistance(irLEDPinRight, irRecPinRight);
+      
+      if (foundCylinder) {
+        stopMovement();
+        currentState = 3;
+        break;
       } else {
-      moveForwardSlow();
+        galvReading = digitalRead(GALV_PIN);
+        if (galvReading == HIGH) {
+          foundCylinder = true;
+        } else if (irDistLeft < 0.8) {
+          turnLeft();
+        } else if (irDistRight < 0.8) {
+          turnRight();
+        } else {
+          moveForwardSlow();
+        }
       }
     }
     
   } else if (currentState == 3) {
-    // Robot stays idle.
+    // Collect cylinder
+    stopMovement();
+    delay(500);
+    servoArm.write(armDown);
+    delay(500);
+    
+    currentState = 4;
+  } else if (currentState == 4) {
+    // Go towards beacon
+
+    steerTowardsBeacon();
+    Serial.println("Beacon loop");
+    
+    while(!onBlackPaper()) {
+      avoidObjects(irDistLeft,irDistRight);
+      checkForBeacon(100);
+      steerTowardsBeacon();
+    }
+    Serial.println("Stopped on black");
+    currentState = 5;
+    
+  } else if (currentState == 5) {
+    // Leave cylinder
+    stopMovement();
+    delay(500);
+    servoArm.write(armUp);
+    delay(2000);
+    currentState = 4;  // For now
   }
 }
 

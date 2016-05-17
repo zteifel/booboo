@@ -1,0 +1,1 @@
+ino serial > tmp; head -4 tmp | tail -1 > tmp2; cat tmp2

@@ -3,7 +3,7 @@
 Servo servoLeft;
 Servo servoRight;
 
-const int READ_PIN    = 8;
+const int READ_PIN    = 9;
 const int SERVO_L_PIN = 13;
 const int SERVO_R_PIN = 12;
 
@@ -21,7 +21,7 @@ void setup()
 void loop()
 {
   reading = digitalRead(READ_PIN);  
-  if(reading == HIGH){
+  if(reading == LOW){
     stopMovement();
   }else{
     moveForward();

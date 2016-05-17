@@ -3,8 +3,14 @@
 
 
 bool couldIntervalBeCylinder(int intervalLength, int intervalDist){
+  //delay(1000); //DEBUG
+  //for(int i=0; i<intervalLength; i++){ //DEBUG beep once per interval index
+  //  tone(beepPin, 1000, 500);
+  //  delay(1000);
+  //}
+  delay(1000); //DEBUG
   // TODO Experimenting with the condition, use intervalDist
-  return intervalLength <= 5;
+  return intervalLength <= 4;
 }
 
 // Determines the index of the best cylinder candidate
@@ -20,6 +26,7 @@ int findCylinder(){
     int nearestIndex = getIndexMin(measurements, noCylinder, nMeasurements);
     
     if(nearestIndex == noCylFound){
+      Serial.println("No cylinder found in scan"); // DEBUG
       return -1;
     }
     
@@ -30,19 +37,32 @@ int findCylinder(){
     while(abs(measurements[nearestIndex] - measurements[iL]) < 5){
       iL = prevIndex(iL, nMeasurements);
       intervalLength++;
-      Serial.println("findCylinder: inner loop 1"); // DEBUG
+      if(iL == iR)
+        break;
+      Serial.println("findCylinder: iL="+String(iL)); // DEBUG
     }
     while(abs(measurements[nearestIndex] - measurements[iR]) < 5){
       iR = nextIndex(iR, nMeasurements);
       intervalLength++;
-      Serial.println("findCylinder: inner loop 2"); // DEBUG
+      if(iL == iR)
+        break;
+      Serial.println("findCylinder: iR="+String(iR)); // DEBUG
     }
     
     if(couldIntervalBeCylinder(intervalLength, measurements[nearestIndex])){
+      Serial.println(
+        "Found cyl in interval of length "+String(intervalLength)+
+        " at dist "+String(measurements[nearestIndex])
+      ); // DEBUG
       return periodicBoundary(iL + intervalLength/2, nMeasurements);
     } else {
-      for(int i=iL+1; i<iR; i=nextIndex(i, nMeasurements)){
+      Serial.println(
+        "No cylinder found in interval of length "+String(intervalLength)+
+        " at dist "+String(measurements[nearestIndex])
+      ); // DEBUG
+      for(int i=iL+1; i!=iR; i=nextIndex(i, nMeasurements)){
         noCylinder[i] = true; 
+        Serial.println("index "+String(i)+" not cylinder"); // DEBUG
       }
     }
   }
@@ -59,6 +79,8 @@ int getIndexOfLargestOpenInterval(){
   int iRight;
   int i=-1;
   while(true) {
+
+    Serial.println("Largest open intervall");
     //Take step into possible new intervall:
     iLeft = nextIndex(i,nMeasurements);
     
@@ -66,13 +88,19 @@ int getIndexOfLargestOpenInterval(){
     
     int intervalWidth = 0;
     while(measurements[iLeft] > horizonDist){
+      //Serial.println("First loop");
       iLeft = prevIndex(iLeft,nMeasurements);
       intervalWidth++;
+      if(iLeft==iRight)
+        break;
     }
     while(measurements[iRight] > horizonDist){
+      //Serial.println("Second loop");
       iRight = nextIndex(iRight,nMeasurements);
       intervalWidth++;
       nbrOfRightChecks++;
+      if(iLeft==iRight)
+        break;
     }
     if(intervalWidth > lenLargest){
       lenLargest = intervalWidth;

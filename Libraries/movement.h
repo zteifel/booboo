@@ -20,10 +20,22 @@ void turnLeft() {
   servoRight.writeMicroseconds(servoRightForward);
 }
 
+void turnLeftSlow() {
+  servoLeft.writeMicroseconds(servoLeftBackwardSlow);
+  servoRight.writeMicroseconds(servoRightForwardSlow);
+}
+
+
 void turnRight() {
   servoLeft.writeMicroseconds(servoLeftForward);
   servoRight.writeMicroseconds(servoRightBackward);
 }
+
+void turnRightSlow() {
+  servoLeft.writeMicroseconds(servoLeftForwardSlow);
+  servoRight.writeMicroseconds(servoRightBackwardSlow);
+}
+
 
 void reverse() {
   servoLeft.writeMicroseconds(servoLeftBackward);
@@ -45,6 +57,11 @@ void rotate(bool clockwise, int speed){
     servoLeft.writeMicroseconds(1500 - speed);
     servoRight.writeMicroseconds(1500 - speed);
   }
+}
+
+void moveStraight(int speed){
+    servoLeft.writeMicroseconds(1500 + speed);
+    servoRight.writeMicroseconds(1500 - speed);
 }
 
 #endif
