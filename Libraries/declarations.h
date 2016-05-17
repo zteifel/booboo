@@ -52,7 +52,7 @@ const int horizonDist = 100;
 const int extraSwipeSteps = 3;
 const int noCylFound = -1;
 const int rotationSpeed = 25;
-const int msInFullTurn = 8000;
+const int msInFullTurn = 8500;
 const int nMeasurements = 50;
 const int msPerStep = msInFullTurn / nMeasurements;
 int  measurements[nMeasurements];
