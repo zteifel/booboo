@@ -117,37 +117,38 @@ void loop() {
         delay(msPerStep * (nMeasurements - headingIndex));
       }
     }
-    
-    //////////////////////////////
-    // Set the timer for state 2
-    if (currentState == 2){
-      time = millis();
-    }
   
   } else if (currentState == 2) {
     // State 2: Move towards a cylinder using IR to correct the path,
     // stop the robot once the element gets a connection.
+    time = millis();
+    foundCylinder = false;
     
-    if(millis() - time > msMoveForward){
-      currentState = 1;
-    }
+    while(true){
+    
+      if(millis() - time > msMoveForward){
+        currentState = 1;
+        break;
+      }
 
-    irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);         // Measure distance
-    irDistRight = irDistance(irLEDPinRight, irRecPinRight);
-    
-    if (foundCylinder) {
-      stopMovement();
-      currentState = 3;
-    } else {
-      galvReading = digitalRead(GALV_PIN);
-      if (galvReading == HIGH) {
-        foundCylinder = true;
-      } else if (irDistLeft < 0.8) {
-        turnLeft();
-      } else if (irDistRight < 0.8) {
-        turnRight();
+      irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);         // Measure distance
+      irDistRight = irDistance(irLEDPinRight, irRecPinRight);
+      
+      if (foundCylinder) {
+        stopMovement();
+        currentState = 3;
+        break;
       } else {
-        moveForwardSlow();
+        galvReading = digitalRead(GALV_PIN);
+        if (galvReading == HIGH) {
+          foundCylinder = true;
+        } else if (irDistLeft < 0.8) {
+          turnLeft();
+        } else if (irDistRight < 0.8) {
+          turnRight();
+        } else {
+          moveForwardSlow();
+        }
       }
     }
     
