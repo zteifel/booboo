@@ -59,4 +59,9 @@ void rotate(bool clockwise, int speed){
   }
 }
 
+void moveStraight(int speed){
+    servoLeft.writeMicroseconds(1500 + speed);
+    servoRight.writeMicroseconds(1500 - speed);
+}
+
 #endif

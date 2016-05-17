@@ -4,6 +4,8 @@
 #define DECLARATIONS_H
 
 
+int currentState;
+
 // Arduino pins
 
 // Pins
@@ -77,8 +79,8 @@ float curTime, beaconLeftTimer, beaconRightTimer;
 
 
 // Other
-const int msMoveForward = 10*1000; // TODO this number is untested
-const int roamingTime = 3; // Seconds
+const int msMoveTowardCylinder = 10*1000; // TODO this number is untested
+const int roamingTime = 10; // Seconds
 int galvReading = 0;
 
 const bool clockwise        = true;
