@@ -10,7 +10,6 @@
 #include "irDistance.h"
 #include "Avoidance.h"
 #include "IR_beacon_nav.h"
-#include "onBlackPaper.h"
 #include "ping_scan.h"
 #include "catch_cylinder.h"
 
@@ -41,6 +40,15 @@ void setup() {
 }
 
 void loop() {
+/*
+  if(onBlackPaper()){
+    stopMovement();
+  }else{
+    moveForward();
+  }
+  delay(500);
+*/
+
   Serial.println(currentState); // DEBUG
   
   // MEASURE DATA
@@ -75,13 +83,13 @@ void loop() {
     steerTowardsBeacon();
     Serial.println("Beacon loop");
     
-    while(!onBlackPaper()) {
+    while(digitalRead(stopOnBlackPin) == HIGH){ // Note: the onBlackPaper function didn't work for some reason.
       avoidObjects(irDistLeft,irDistRight);
       checkForBeacon(100);
       steerTowardsBeacon();
     }
     Serial.println("Stopped on black");
-    currentState = 5;
+    currentState = STATE_DROP_CYLINDER;
     
   } else if (currentState == STATE_DROP_CYLINDER) {
     // Leave cylinder
@@ -90,4 +98,5 @@ void loop() {
     servoArm.write(armUp);
     delay(2000);
   }
+  
 }
