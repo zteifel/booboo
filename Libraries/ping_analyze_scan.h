@@ -3,10 +3,12 @@
 
 
 bool couldIntervalBeCylinder(int intervalLength, int intervalDist){
-  for(int i=0; i<intervalLength; i++){
-    tone(beepPin, 1000, 500);
-    delay(1000);
-  }
+  //delay(1000); //DEBUG
+  //for(int i=0; i<intervalLength; i++){ //DEBUG beep once per interval index
+  //  tone(beepPin, 1000, 500);
+  //  delay(1000);
+  //}
+  delay(1000); //DEBUG
   // TODO Experimenting with the condition, use intervalDist
   return intervalLength <= 4;
 }
