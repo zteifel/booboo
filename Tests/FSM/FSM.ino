@@ -11,7 +11,7 @@ const int SERVO_R_PIN = 12;
 const int BUTTON_PIN = 8;
 const int SPEAKER_PIN = 7; // Status speaker, resistor?
 const int ULTRA_SOUND_PIN = 6;
-const int GALV_PIN = 10;
+const int GALV_PIN = A1;
 
 // Constants for servo
 Servo servoRight;
@@ -118,8 +118,6 @@ void loop() {
     
     
   } else if (currentState == 3) {
-    irDistLeft = irDistance(IR_LED_PIN_LEFT, IR_REC_PIN_LEFT);         // Measure distance
-    irDistRight = irDistance(IR_LED_PIN_RIGHT, IR_REC_PIN_RIGHT);
 
   //Serial.print(irDistLeft);
   //Serial.print("  ");
@@ -128,10 +126,13 @@ void loop() {
   if (foundCylinder) {
     stopMovement();
   } else {
+  irDistLeft = irDistance(IR_LED_PIN_LEFT, IR_REC_PIN_LEFT);         // Measure distance
+  irDistRight = irDistance(IR_LED_PIN_RIGHT, IR_REC_PIN_RIGHT);
   galvReading = digitalRead(GALV_PIN);
   if (galvReading == HIGH) {
     foundCylinder = true;
-    //Serial.println("Galv!");
+    stopMovement();
+    Serial.println("Galv!");
   } else if (irDistLeft < 0.8) {
     turnLeft();
   } else if (irDistRight < 0.8) {
