@@ -22,9 +22,16 @@ void catch_cylinder(){
     irDistRight = irDistance(irLEDPinRight, irRecPinRight);
     
     if (foundCylinder) {
+      
       stopMovement();
       currentState = 3;
+      
+      delay(500);
+      servoArm.write(armDown);
+      delay(500);
+      
       break;
+      
     } else {
       galvReading = digitalRead(GALV_PIN);
       galvReading = LOW;
