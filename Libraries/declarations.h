@@ -3,7 +3,12 @@
 #ifndef DECLARATIONS_H
 #define DECLARATIONS_H
 
-
+// States
+const int STATE_MOVE_AND_AVOID  = 0;
+const int STATE_PING_SCAN       = 1;
+const int STATE_CATCH_CYLINDER  = 2;
+const int STATE_MOVE_TO_BEACON  = 3;
+const int STATE_DROP_CYLINDER   = 4;
 int currentState;
 
 // Arduino pins
@@ -19,15 +24,15 @@ const int beepPin = 7;	// Buzzer
 const int buttonPin = 8;  // Status speaker, resistor?
 const int leftServoPin = 13;
 const int rightServoPin = 12;
-
+const int ARM_SERVO_PIN = 11;
 const int stopOnBlackPin = 9;
 
 // Analogue
-const int GALV_PIN = 10;
+const int GALV_PIN = A1;
+const int WHISKER_L_PIN  = A2;
+const int WHISKER_R_PIN = A3;
 const int IR_BEACON_L_PIN  = A4;
 const int IR_BEACON_R_PIN = A5;
-
-
 
 // Constants for IR
 const int irMaxFreq = 58000;
@@ -79,14 +84,13 @@ float curTime, beaconLeftTimer, beaconRightTimer;
 
 
 // Other
-const int msMoveTowardCylinder = 10*1000; // TODO this number is untested
+const int msMoveTowardCylinder = 10*1000;
 const int roamingTime = 10; // Seconds
 int galvReading = 0;
 
 const bool clockwise        = true;
 const bool counterClockwise = false;
 
-const int ARM_SERVO_PIN = 11;
 const int armUp = 90;
 const int armDown = 30;
 

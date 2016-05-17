@@ -49,11 +49,11 @@ void ping_scan(){
     if(cylinderIndex == noCylFound){
       Serial.println("Entering getIndexOfLargestOpenInterval"); // DEBUG
       headingIndex = getIndexOfLargestOpenInterval();
-      currentState = 0;
+      currentState = STATE_MOVE_AND_AVOID;
     }
     else{
       headingIndex = cylinderIndex;
-      currentState = 2;
+      currentState = STATE_CATCH_CYLINDER;
     }
   
     Serial.println("Entering rotation"); // DEBUG
