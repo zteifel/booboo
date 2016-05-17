@@ -14,7 +14,7 @@ void catch_cylinder(){
   while(true){
   
     if(millis() - time > msMoveTowardCylinder){
-      currentState = 1;
+      currentState = STATE_PING_SCAN;
       break;
     }
 
@@ -24,7 +24,7 @@ void catch_cylinder(){
     if (foundCylinder) {
       
       stopMovement();
-      currentState = 3;
+      currentState = STATE_MOVE_TO_BEACON;
       
       delay(500);
       servoArm.write(armDown);
@@ -34,9 +34,8 @@ void catch_cylinder(){
       
     } else {
       galvReading = digitalRead(GALV_PIN);
-      galvReading = LOW;
       if (galvReading == HIGH) {
-        foundCylinder = true; // DEBUG
+        foundCylinder = true;
       } else if (irDistLeft < 0.8) {
         turnLeft();
       } else if (irDistRight < 0.8) {
