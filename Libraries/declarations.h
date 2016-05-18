@@ -47,17 +47,24 @@ float irDistLeft, irDistRight;
 float irDetected;
 
 // Sonar
+/*
 const int discardCylDist = 65;
 const int horizonDist = 100;
 const int extraSwipeSteps = 3;
 const int noCylFound = -1;
-const int rotationSpeed = 25;
-const int msInFullTurn = 8500;
-const int nMeasurements = 50;
-const int msPerStep = msInFullTurn / nMeasurements;
-int  measurements[nMeasurements];
 int  noCylinder[nMeasurements];
 int  stepsToCylinder;
+const int msInFullTurn = 8500;
+const int msPerStep = msInFullTurn / nMeasurements;
+*/
+const int rotationSpeed = 25;
+const int msPerStep = 170; // Gamla msInFullTurn / nMeasurements == 8500/50
+const int nMeasurements = 50;
+int  measurements[nMeasurements];
+const int maxCylWidth = 7;
+const int minCylDepth = 5;
+const int maxCylDist = 60;
+const int pingTimeOut = 100;
 
 // Servo
 const int servoOffset           = 4;

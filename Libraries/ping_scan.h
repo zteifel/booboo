@@ -69,6 +69,7 @@ void ping_scan(){
         delay(msPerStep * (nMeasurements - headingIndex));
       }
     }
+    stopMovement();
 }
 
 #endif

@@ -8,9 +8,8 @@ bool couldIntervalBeCylinder(int intervalLength, int intervalDist){
   //  tone(beepPin, 1000, 500);
   //  delay(1000);
   //}
-  delay(1000); //DEBUG
-  // TODO Experimenting with the condition, use intervalDist
-  return intervalLength <= 4;
+  //delay(1000); //DEBUG
+  return intervalLength <= 5;
 }
 
 // Determines the index of the best cylinder candidate
@@ -27,7 +26,7 @@ int findCylinder(){
     
     if(nearestIndex == noCylFound){
       Serial.println("No cylinder found in scan"); // DEBUG
-      return -1;
+      return noCylFound;
     }
     
     int iL = prevIndex(nearestIndex, nMeasurements);
@@ -37,15 +36,15 @@ int findCylinder(){
     while(abs(measurements[nearestIndex] - measurements[iL]) < 5){
       iL = prevIndex(iL, nMeasurements);
       intervalLength++;
-      if(iL == iR)
-        break;
+      //if(iL == iR)
+        //break;
       Serial.println("findCylinder: iL="+String(iL)); // DEBUG
     }
     while(abs(measurements[nearestIndex] - measurements[iR]) < 5){
       iR = nextIndex(iR, nMeasurements);
       intervalLength++;
-      if(iL == iR)
-        break;
+      //if(iL == iR)
+        //break;
       Serial.println("findCylinder: iR="+String(iR)); // DEBUG
     }
     
@@ -60,7 +59,7 @@ int findCylinder(){
         "No cylinder found in interval of length "+String(intervalLength)+
         " at dist "+String(measurements[nearestIndex])
       ); // DEBUG
-      for(int i=iL+1; i!=iR; i=nextIndex(i, nMeasurements)){
+      for(int i=nextIndex(iL, nMeasurements); i!=iR; i=nextIndex(i, nMeasurements)){
         noCylinder[i] = true; 
         Serial.println("index "+String(i)+" not cylinder"); // DEBUG
       }
