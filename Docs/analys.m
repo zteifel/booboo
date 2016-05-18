@@ -12,9 +12,9 @@ figure(1)
 subplot(3,1,1)
 plot(empty20cm2,'.','markersize',20)
 subplot(3,1,2)
-plot(empty40cm2,'.','markersize',20)
+plot(empty40cm1,'.','markersize',20)
 subplot(3,1,3)
-plot(empty60cm2,'.','markersize',20)
+plot(empty60cm1,'.','markersize',20)
 
 wall20cm1 = [141 141 141 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 23 22 21 21 21 21 22 27 255 255 255 143 142 140 140 141 142 255 255];
 wall40cm1 = [186 185 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255 33 32 30 30 29 29 29 30 30 32 255 255 255 186 185 185 186 255 255 255];
@@ -40,9 +40,9 @@ wallCylinderRobotBox60cm2 = [255 255 255 255 255 255 255 255 255 255 255 255 255
 
 figure(3)
 subplot(3,1,1)
-plot(wallCylinderRobotBox20cm2,'.','markersize',20)
+plot(wallCylinderRobotBox20cm1,'.','markersize',20)
 subplot(3,1,2)
-plot(wallCylinderRobotBox40cm2,'.','markersize',20)
+plot(wallCylinderRobotBox40cm1,'.','markersize',20)
 subplot(3,1,3)
-plot(wallCylinderRobotBox60cm2,'.','markersize',20)
+plot(wallCylinderRobotBox60cm1,'.','markersize',20)
 
