@@ -12,6 +12,7 @@
 
 void setup() {
   Serial.begin(9600);
+  Serial.flush();
   servoLeft.attach(leftServoPin);
   servoRight.attach(rightServoPin);
   delay(2000);

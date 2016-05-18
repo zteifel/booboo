@@ -58,13 +58,13 @@ const int msInFullTurn = 8500;
 const int msPerStep = msInFullTurn / nMeasurements;
 */
 const int rotationSpeed = 25;
-const int msPerStep = 170; // Gamla msInFullTurn / nMeasurements == 8500/50
+const int msPerStep = 8500/50; // Gamla msInFullTurn / nMeasurements == 8500/50
 const int nMeasurements = 50;
-int  measurements[nMeasurements];
 const int maxCylWidth = 7;
 const int minCylDepth = 5;
 const int maxCylDist = 60;
 const int pingTimeOut = 100;
+int  measurements[nMeasurements];
 
 // Servo
 const int servoOffset           = 4;

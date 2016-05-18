@@ -7,18 +7,22 @@
 #include "ping_basic.h"
 #include "beeps.h"
 #include "ping_scan_utils.h"
-#include "ping_analyze_scan.h"
+//#include "ping_analyze_scan.h"
 
+/*
 const int maxCylWidth = 7;
 const int minCylDepth = 5;
 const int maxCylDist = 60;
 const int timeOut = 100;
+*/
 
 void resetMeasurements(){
     for(int i=0; i < nMeasurements; i++){
       measurements[i]=0;
     }
 }
+
+// OBS! Ta inte bort serial-println-raderna! Programmet funkar inte utan dem (otroligt konstigt).
 
 // State 1: Use the sonar to search and find direction to a cylinder.
 void ping_scan(){
@@ -29,13 +33,13 @@ void ping_scan(){
     
     resetMeasurements();
     measurements[1] = measurePingDist();
-    Serial.println(String(measurements[1])); // DEBUG
+    Serial.println("Latest measurement: "+String(measurements[1])); // DEBUG
     
     rotate(counterClockwise, rotationSpeed);
     while(true){
       measurements[0] = measurements[1];
       measurements[1] = measurePingDist();
-      Serial.println(String(measurements[1])); // DEBUG
+      Serial.println("Latest measurement: "+String(measurements[1])); // DEBUG
       delay(msPerStep-7);
       if( (measurements[0] - measurements[1]) > minCylDepth && measurements[1] < maxCylDist){
         break;
@@ -52,18 +56,32 @@ void ping_scan(){
       i++;
       intervalLength++;
       measurements[i] = measurePingDist();
-      Serial.println(String(measurements[i])); // DEBUG
+      Serial.println("Latest measurement: "+String(measurements[i])); // DEBUG
       delay(msPerStep-7);
-      if(measurements[i] - measurements[i-1] > minCylDepth){// || intervalLength > maxCylWidth){
+      if(measurements[i] - measurements[i-1] > minCylDepth){
         break;
       }
+      // Reset the interval scan if a new right edge is found. (TODO This needs improvement)
+      /*
+      if( (measurements[i-1] - measurements[i]) > minCylDepth && measurements[i] < maxCylDist){
+        stopMovement();
+        beep2();
+        int tmp1 = measurements[i], tmp0 = measurements[i-1];
+        resetMeasurements();
+        measurements[0] = tmp0;
+        measurements[1] = tmp1;
+        i = 1;
+        intervalLength = 0;
+        rotate(counterClockwise, rotationSpeed);
+      }
+      */
     }
     stopMovement();
     
     beep3();
     
-    delay(3000);
-    binaryNumberBeep(intervalLength);
+    //delay(3000); // DEBUG
+    //binaryNumberBeep(intervalLength); // DEBUG
     
     if(intervalLength < maxCylWidth){
       rotate(clockwise, rotationSpeed);
