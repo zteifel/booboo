@@ -8,6 +8,7 @@
 #include "beeps.h"
 #include "ping_scan_utils.h"
 #include "ping_analyze_scan.h"
+#include <Average.h>
 
 const int maxCylWidth = 7;
 const int minCylDepth = 5;
@@ -85,4 +86,35 @@ void ping_scan(){
   
 }
 
+bool isCylinder(int measurements[nMeasurements], int intervalLength) {
+
+    if (minimum(measurements, intervalLength) < 20) {
+        if (intervalLength <= 8) {
+            return true;
+        }else{
+            return false;
+        }
+    }else if(minimum(measurements, intervalLength) < 30) {
+        if (intervalLength <= 7) {
+            return true;
+        }else{
+            return false;
+        }
+    }else if(minimum(measurements, intervalLength) < 40) {
+        if (intervalLength <= 5) {
+            return true;
+        }else{
+            return false;
+        }
+    }else{
+        if (intervalLength <= 4) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+
+
+}
 #endif
