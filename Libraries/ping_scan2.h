@@ -22,6 +22,36 @@ void resetMeasurements(){
     }
 }
 
+bool isCylinder(int measurements[nMeasurements], int intervalLength) {
+
+    if (minimum(measurements, intervalLength) < 20) {
+        if (intervalLength <= 8) {
+            return true;
+        }else{
+            return false;
+        }
+    }else if(minimum(measurements, intervalLength) < 30) {
+        if (intervalLength <= 7) {
+            return true;
+        }else{
+            return false;
+        }
+    }else if(minimum(measurements, intervalLength) < 40) {
+        if (intervalLength <= 5) {
+            return true;
+        }else{
+            return false;
+        }
+    }else{
+        if (intervalLength <= 4) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+
+
 // OBS! Ta inte bort serial-println-raderna! Programmet funkar inte utan dem (otroligt konstigt).
 
 // State 1: Use the sonar to search and find direction to a cylinder.
@@ -83,6 +113,7 @@ void ping_scan(){
     //delay(3000); // DEBUG
     //binaryNumberBeep(intervalLength); // DEBUG
     
+    //if(isCylinder(measurements, intervalLength)){
     if(intervalLength < maxCylWidth){
       rotate(clockwise, rotationSpeed);
       delay(msPerStep * intervalLength/2);
@@ -103,35 +134,4 @@ void ping_scan(){
   
 }
 
-bool isCylinder(int measurements[nMeasurements], int intervalLength) {
-
-    if (minimum(measurements, intervalLength) < 20) {
-        if (intervalLength <= 8) {
-            return true;
-        }else{
-            return false;
-        }
-    }else if(minimum(measurements, intervalLength) < 30) {
-        if (intervalLength <= 7) {
-            return true;
-        }else{
-            return false;
-        }
-    }else if(minimum(measurements, intervalLength) < 40) {
-        if (intervalLength <= 5) {
-            return true;
-        }else{
-            return false;
-        }
-    }else{
-        if (intervalLength <= 4) {
-            return true;
-        }else{
-            return false;
-        }
-    }
-}
-
-
-}
 #endif
