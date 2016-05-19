@@ -3,10 +3,7 @@
 #include <EEPROM.h>
 #include "declarations.h"
 #include "movement.h"
-#include "ping_basic.h"
 #include "beeps.h"
-#include "ping_scan_utils.h"
-//#include "ping_analyze_scan.h"
 #include "irDistance.h"
 #include "Avoidance.h"
 #include "IR_beacon_nav.h"
@@ -18,6 +15,8 @@ void setup() {
 
   Serial.begin(9600);
 
+  randomSeed(analogRead(0));
+  
   servoLeft.attach(leftServoPin);
   servoRight.attach(rightServoPin);
   
@@ -54,10 +53,6 @@ void loop() {
     for (int i = 1; i < roamingTime*20; i++) {
       irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);         // Measure distance
       irDistRight = irDistance(irLEDPinRight, irRecPinRight);
-      Serial.print(irDistLeft);
-      Serial.print("  ");
-      Serial.println(irDistRight);
-      
       moveForward();
       avoidObjects(irDistLeft, irDistRight);
       delay(50);
@@ -67,6 +62,7 @@ void loop() {
     
   } else if (currentState == STATE_PING_SCAN) {
     // State 1: Use the sonar to search and find direction to a cylinder.
+    time = millis();
     ping_scan();
   
   } else if (currentState == STATE_CATCH_CYLINDER) {
@@ -94,7 +90,19 @@ void loop() {
     stopMovement();
     delay(500);
     servoArm.write(armUp);
-    delay(2000);
+    delay(500);
+    
+    beep();
+    
+    // Start a new roam in a random direction
+    reverse();
+    delay(1000);
+    stopMovement();
+    int randomDir = random(13, 37);
+    rotate(clockwise, rotationSpeed);
+    delay(msPerStep * randomDir);
+    stopMovement();
+    currentState = STATE_MOVE_AND_AVOID;
   }
   
 }

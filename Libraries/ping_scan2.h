@@ -66,17 +66,27 @@ bool isCylinder(int measurements[nMeasurements], int intervalLength) {
 
 // State 1: Use the sonar to search and find direction to a cylinder.
 void ping_scan(){
-  int scan_steps = 0;
   
-  while(scan_steps < pingTimeOut){
-    scan_steps++;
+  while(true){
     
+    // If time out, rotate to a random direction and exit to roam state
+    if(millis() - time > timeOut_ping){
+      int randomDir = random(50);
+      rotate(clockwise, rotationSpeed);
+      delay(msPerStep * randomDir);
+      stopMovement();
+      currentState = STATE_MOVE_AND_AVOID;
+      return;
+    }
+    
+    // Reset the buffer
     resetMeasurements();
     measurements[1] = measurePingDist();
     Serial.println("Latest measurement: "+String(measurements[1])); // DEBUG
     
+    // 
     rotate(counterClockwise, rotationSpeed);
-    while(true){
+    while(millis() - time < timeOut_ping){
       measurements[0] = measurements[1];
       measurements[1] = measurePingDist();
       Serial.println("Latest measurement: "+String(measurements[1])); // DEBUG
@@ -92,7 +102,7 @@ void ping_scan(){
     int intervalLength = 0;
     int i = 1;
     rotate(counterClockwise, rotationSpeed);
-    while(true){
+    while(millis() - time < timeOut_ping){
       i++;
       intervalLength++;
       measurements[i] = measurePingDist();
