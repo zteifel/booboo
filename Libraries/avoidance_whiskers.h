@@ -11,8 +11,8 @@ bool avoidance_whiskers() {
   if (leftWhiskerReading == HIGH && rightWhiskerReading == HIGH) {
     reverse();
     delay(500);
-    turnLeft();
-    delay(3000);
+    turnLeftSlow();
+    delay(2500);
     return true;
   } else if (leftWhiskerReading == HIGH) {
     reverse();

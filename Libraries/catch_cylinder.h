@@ -55,12 +55,12 @@ void catch_cylinder(){
           currentState = STATE_MOVE_AND_AVOID;
           break;
         }
-        if (irDistLeft < 0.8 && irDistRight < 0.8) {
+        if (irDistLeft < 0.9 && irDistRight < 0.9) {
           moveStraight(50);
         } else if (irDistLeft < 0.8) {
-          turnLeft();
+          turnLeftSlow();
         } else if (irDistRight < 0.8) {
-          turnRight();
+          turnRightSlow();
         } else {
           moveStraight(50);
         }
