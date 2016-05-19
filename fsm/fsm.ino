@@ -94,13 +94,7 @@ void loop() {
     beep();
     
     // Start a new roam in a random direction
-    reverse();
-    delay(1000);
-    stopMovement();
-    int randomDir = random(13, 37);
-    rotate(clockwise, rotationSpeed);
-    delay(msPerStep * randomDir);
-    stopMovement();
+    reverseAndRandomDir(13, 37);
     currentState = STATE_MOVE_AND_AVOID;
   }
   
