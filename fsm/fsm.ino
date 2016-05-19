@@ -64,6 +64,7 @@ void loop() {
   } else if (currentState == STATE_CATCH_CYLINDER) {
     // State 2: Move towards a cylinder using IR to correct the path,
     // stop the robot once the element gets a connection.
+    time = millis();
     catch_cylinder();
     
   } else if (currentState == STATE_MOVE_TO_BEACON) {
