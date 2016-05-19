@@ -15,6 +15,7 @@ void catch_cylinder(){
   
     if(millis() - time > msMoveTowardCylinder){
       currentState = STATE_PING_SCAN;
+      Serial.println("Catch cylinder time out.");
       break;
     }
 
