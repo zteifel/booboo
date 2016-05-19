@@ -101,4 +101,6 @@ const bool counterClockwise = false;
 const int armUp = 90;
 const int armDown = 30;
 
+int leftWhiskerReading, rightWhiskerReading;
+
 #endif
