@@ -4,17 +4,30 @@
 #include "declarations.h"
 #include "movement.h"
 #include "irDistance.h"
+#include "Arduino.h"
 
 // State 2: Move towards a cylinder using IR to correct the path,
     // stop the robot once the element gets a connection.
 void catch_cylinder(){
-  unsigned long time = millis();
   bool foundCylinder = false;
     
   while(true){
   
     if(millis() - time > msMoveTowardCylinder){
       currentState = STATE_PING_SCAN;
+      break;
+    }
+
+    if(digitalRead(stopOnBlackPin) == LOW){		// Do a random walk
+      Serial.println("Trying to catch a already captured cylinder");
+
+      reverse();	// Go backwards first
+      delay(1000);
+      int randomDir = random(13,37);	// Random dir backwards
+      rotate(clockwise, rotationSpeed);	// Rotate
+      delay(msPerStep*randomDir);
+      stopMovement();
+      currentState = STATE_MOVE_AND_AVOID;
       break;
     }
 
