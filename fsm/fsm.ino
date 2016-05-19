@@ -12,6 +12,7 @@
 #include "IR_beacon_nav.h"
 #include "ping_scan2.h"
 #include "catch_cylinder.h"
+#include "avoidance_whiskers.h"
 
 void setup() {
 
@@ -28,6 +29,9 @@ void setup() {
   
   pinMode(GALV_PIN, INPUT);
   pinMode(stopOnBlackPin, INPUT);
+
+  pinMode(WHISKER_L_PIN, INPUT); 
+  pinMode(WHISKER_R_PIN, INPUT);
   
   servoArm.attach(ARM_SERVO_PIN);
 
@@ -69,6 +73,7 @@ void loop() {
     // State 2: Move towards a cylinder using IR to correct the path,
     // stop the robot once the element gets a connection.
     catch_cylinder();
+    delay(50);
     
   } else if (currentState == STATE_MOVE_TO_BEACON) {
     // Go towards beacon
