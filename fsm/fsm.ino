@@ -6,11 +6,11 @@
 #include "ping_basic.h"
 #include "beeps.h"
 #include "ping_scan_utils.h"
-#include "ping_analyze_scan.h"
+//#include "ping_analyze_scan.h"
 #include "irDistance.h"
 #include "Avoidance.h"
 #include "IR_beacon_nav.h"
-#include "ping_scan.h"
+#include "ping_scan2.h"
 #include "catch_cylinder.h"
 
 void setup() {
@@ -35,7 +35,7 @@ void setup() {
 
   servoArm.write(armUp); // Set the arm in diagonal upright position
   
-  currentState = STATE_CATCH_CYLINDER;
+  currentState = STATE_MOVE_AND_AVOID;
 
 }
 
@@ -44,16 +44,16 @@ void loop() {
 
   // Serial.println(currentState); // DEBUG
   
-  // MEASURE DATA
-  irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);         // Measure distance
-  irDistRight = irDistance(irLEDPinRight, irRecPinRight);
-  
   if (currentState == STATE_MOVE_AND_AVOID) {
     // State 0: Move forward a set number of steps and then go to state 1. Avoid any objects.
 
     for (int i = 1; i < roamingTime*20; i++) {
       irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);         // Measure distance
       irDistRight = irDistance(irLEDPinRight, irRecPinRight);
+      Serial.print(irDistLeft);
+      Serial.print("  ");
+      Serial.println(irDistRight);
+      
       moveForward();
       avoidObjects(irDistLeft, irDistRight);
       delay(50);
@@ -77,7 +77,7 @@ void loop() {
     Serial.println("Beacon loop");
     
     while(digitalRead(stopOnBlackPin) == HIGH){ // Note: the onBlackPaper function didn't work for some reason.
-      avoidObjects(irDistLeft,irDistRight);
+      //avoidObjects(irDistLeft,irDistRight);
       checkForBeacon(100);
       steerTowardsBeacon();
     }

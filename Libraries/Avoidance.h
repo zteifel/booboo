@@ -11,10 +11,10 @@ void avoidObjects(float irDistLeft, float irDistRight) {
     reverse();
   } else if (irDistLeft < irDistThreshold) {
     turnRight();
-    Serial.println("Right");
+    //Serial.println("Right");
   } else if (irDistRight < irDistThreshold) {
     turnLeft();
-    Serial.println("Left");
+    //Serial.println("Left");
   }
 }
 

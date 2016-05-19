@@ -1,5 +1,5 @@
-#ifndef PING_SCAN_H
-#define PING_SCAN_H
+#ifndef PING_SCAN2_H
+#define PING_SCAN2_H
 
 #include "Arduino.h"
 #include "declarations.h"
@@ -7,7 +7,6 @@
 #include "ping_basic.h"
 #include "beeps.h"
 #include "ping_scan_utils.h"
-#include <Average.h>
 
 /*
 const int maxCylWidth = 7;
@@ -22,28 +21,39 @@ void resetMeasurements(){
     }
 }
 
-bool isCylinder(int measurements[nMeasurements], int intervalLength) {
+int minimum(int measurements[nMeasurements], int intervalLength) {
+  int minValue = 10000;
+  for (int i = 1; i < intervalLength; i++) {
+      if (measurements[i] < minValue && measurements[i] > 0) {
+        minValue = measurements[i];
+      }
+  }
+  return minValue;
+}
 
-    if (minimum(measurements, intervalLength) < 20) {
+bool isCylinder(int measurements[nMeasurements], int intervalLength) {
+  int minValue = minimum(measurements, intervalLength);
+
+    if (minValue < 20) {
+        if (intervalLength <= 9) {
+            return true;
+        }else{
+            return false;
+        }
+    }else if(minValue < 30) {
         if (intervalLength <= 8) {
             return true;
         }else{
             return false;
         }
-    }else if(minimum(measurements, intervalLength) < 30) {
+    }else if(minValue < 40) {
         if (intervalLength <= 7) {
             return true;
         }else{
             return false;
         }
-    }else if(minimum(measurements, intervalLength) < 40) {
-        if (intervalLength <= 5) {
-            return true;
-        }else{
-            return false;
-        }
     }else{
-        if (intervalLength <= 4) {
+        if (intervalLength <= 6) {
             return true;
         }else{
             return false;
@@ -113,12 +123,13 @@ void ping_scan(){
     //delay(3000); // DEBUG
     //binaryNumberBeep(intervalLength); // DEBUG
     
-    //if(isCylinder(measurements, intervalLength)){
-    if(intervalLength < maxCylWidth){
+    if(isCylinder(measurements, intervalLength)){
+    //if(intervalLength < maxCylWidth){
       rotate(clockwise, rotationSpeed);
       delay(msPerStep * intervalLength/2);
       stopMovement();
       beep();
+      currentState = STATE_CATCH_CYLINDER;
       return;
     }
   }
