@@ -3,26 +3,31 @@
 #ifndef AVOIDANCE_WHISKERS_H
 #define AVOIDANCE_WHISKERS_H
 
-void avoidance_whiskers() {
+bool avoidance_whiskers() {
 
   leftWhiskerReading = digitalRead(WHISKER_L_PIN);
   rightWhiskerReading = digitalRead(WHISKER_R_PIN);
   
   if (leftWhiskerReading == HIGH && rightWhiskerReading == HIGH) {
     reverse();
-    delay(1500);
+    delay(500);
     turnLeft();
     delay(3000);
+    return true;
   } else if (leftWhiskerReading == HIGH) {
     reverse();
+    delay(500);
+    turnRightSlow();
     delay(1500);
-    turnRight();
-    delay(2000);
+    return true;
   } else if (rightWhiskerReading == HIGH) {
     reverse();
+    delay(500);
+    turnLeftSlow();
     delay(1500);
-    turnLeft();
-    delay(2000);
+    return true;
+  } else {
+    return false;
   }
 }
 

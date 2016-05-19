@@ -5,6 +5,7 @@
 #include "movement.h"
 #include "irDistance.h"
 #include "Arduino.h"
+#include "avoidance_whiskers.h"
 
 // State 2: Move towards a cylinder using IR to correct the path,
     // stop the robot once the element gets a connection.
@@ -50,13 +51,22 @@ void catch_cylinder(){
       galvReading = digitalRead(GALV_PIN);
       if (galvReading == HIGH) {
         foundCylinder = true;
-      } else if (irDistLeft < 0.8) {
-        turnLeft();
-      } else if (irDistRight < 0.8) {
-        turnRight();
       } else {
-        moveStraight(50);
+        if(avoidance_whiskers()) {
+          currentState = STATE_MOVE_AND_AVOID;
+          break;
+        }
+        if (irDistLeft < 0.8 && irDistRight < 0.8) {
+          moveStraight(50);
+        } else if (irDistLeft < 0.8) {
+          turnLeft();
+        } else if (irDistRight < 0.8) {
+          turnRight();
+        } else {
+          moveStraight(50);
+        }
       }
+      delay(50);
     }
   }
   

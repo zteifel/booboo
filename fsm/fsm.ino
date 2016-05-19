@@ -9,7 +9,6 @@
 #include "IR_beacon_nav.h"
 #include "ping_scan2.h"
 #include "catch_cylinder.h"
-#include "avoidance_whiskers.h"
 
 void setup() {
 
@@ -70,7 +69,6 @@ void loop() {
     // stop the robot once the element gets a connection.
     time = millis();
     catch_cylinder();
-    delay(50);
     
   } else if (currentState == STATE_MOVE_TO_BEACON) {
     // Go towards beacon
