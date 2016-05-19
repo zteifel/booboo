@@ -84,7 +84,7 @@ void ping_scan(){
     measurements[1] = measurePingDist();
     Serial.println("Latest measurement: "+String(measurements[1])); // DEBUG
     
-    // 
+    // Scan for a right edge
     rotate(counterClockwise, rotationSpeed);
     while(millis() - time < timeOut_ping){
       measurements[0] = measurements[1];
@@ -99,6 +99,7 @@ void ping_scan(){
     
     beep2();
     
+    // Scan for a left edge
     int intervalLength = 0;
     int i = 1;
     rotate(counterClockwise, rotationSpeed);
@@ -133,6 +134,7 @@ void ping_scan(){
     //delay(3000); // DEBUG
     //binaryNumberBeep(intervalLength); // DEBUG
     
+    // Check if the interval is a cylinder and rotate towards it
     if(isCylinder(measurements, intervalLength)){
     //if(intervalLength < maxCylWidth){
       rotate(clockwise, rotationSpeed);

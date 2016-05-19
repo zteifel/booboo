@@ -20,8 +20,7 @@ void catch_cylinder(){
     }
 
     if(digitalRead(stopOnBlackPin) == LOW){		// Do a random walk
-      Serial.println("Trying to catch a already captured cylinder");
-
+      Serial.println("Trying to catch an already captured cylinder");
       reverse();	// Go backwards first
       delay(1000);
       int randomDir = random(13,37);	// Random dir backwards

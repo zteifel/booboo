@@ -63,7 +63,7 @@ const int nMeasurements = 50;
 const int maxCylWidth = 7;
 const int minCylDepth = 5;
 const int maxCylDist = 60;
-const int timeOut_ping = 10000;
+const int timeOut_ping = 10*1000;
 int  measurements[nMeasurements];
 
 // Servo
@@ -94,7 +94,7 @@ float curTime, beaconLeftTimer, beaconRightTimer;
 unsigned long time;
 
 const int msMoveTowardCylinder = 10*1000;
-const int roamingTime = 2; // Seconds
+const int roamingTime = 1.5; // Seconds
 
 int galvReading = 0;
 
