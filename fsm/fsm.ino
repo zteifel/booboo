@@ -54,7 +54,11 @@ void loop() {
   } else if (currentState == STATE_PING_SCAN) {
     // State 1: Use the sonar to search and find direction to a cylinder.
     time = millis();
-    ping_scan();
+    while(true){
+      ping_scan();
+      if(currentState != STATE_PING_SCAN)
+        break;
+    }
   
   } else if (currentState == STATE_CATCH_CYLINDER) {
     // State 2: Move towards a cylinder using IR to correct the path,

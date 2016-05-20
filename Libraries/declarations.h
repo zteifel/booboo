@@ -61,9 +61,9 @@ const int rotationSpeed = 25;
 const int msPerStep = 8500/50; // Gamla msInFullTurn / nMeasurements == 8500/50
 const int nMeasurements = 50;
 const int maxCylWidth = 7;
-const int minCylDepth = 5;
+const int minCylDepth = 8;
 const int maxCylDist = 60;
-const int timeOut_ping = 10*1000;
+const int timeOut_ping = 12*1000;
 int  measurements[nMeasurements];
 
 // Servo
