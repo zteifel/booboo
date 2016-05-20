@@ -49,12 +49,8 @@ void loop() {
   if (currentState == STATE_MOVE_AND_AVOID) {
     // State 0: Move forward a set number of steps and then go to state 1. Avoid any objects.
 
-    for (int i = 1; i < roamingTime*20; i++) {
-      irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);         // Measure distance
-      irDistRight = irDistance(irLEDPinRight, irRecPinRight);
-      moveForward();
-      avoidObjects(irDistLeft, irDistRight);
-      delay(50);
+    catch_cylinder();
+    
     }
 
     currentState = STATE_PING_SCAN;
