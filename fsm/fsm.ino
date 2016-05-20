@@ -47,9 +47,11 @@ void loop() {
   // Serial.println(currentState); // DEBUG
   
   if (currentState == STATE_MOVE_AND_AVOID) {
-    // State 0: Move forward a set number of steps and then go to state 1. Avoid any objects.
-    
-    currentState = STATE_CATCH_CYLINDER;
+    // State 0: Move forward a set number of steps and then go to state 1. Avoid any objects.    
+
+    randomWalk(0,0,roamingTime);  // Walk straight ahead during 1.5sec
+
+    currentState = STATE_PING_SCAN;
     
   } else if (currentState == STATE_PING_SCAN) {
     // State 1: Use the sonar to search and find direction to a cylinder.
@@ -68,14 +70,18 @@ void loop() {
     
   } else if (currentState == STATE_MOVE_TO_BEACON) {
     // Go towards beacon
-
+    lastBeaconTime = millis();  // Init
     steerTowardsBeacon();
-    Serial.println("Beacon loop");
     
-    while(digitalRead(stopOnBlackPin) == HIGH){ // Note: the onBlackPaper function didn't work for some reason.
-      //avoidObjects(irDistLeft,irDistRight);
+    while(digitalRead(stopOnBlackPin) == HIGH ){ // Note: the onBlackPaper function didn't work for some reason.
+           
+      if(lastBeaconTime - millis() > timeOut_beacon) { // Walk random during 10sec
+        randomWalk(0, 50, 10); // Randomwalk 360 deg during 10sec  
+      }
+      // Scan for cylinder
       checkForBeacon(100);
       steerTowardsBeacon();
+      //avoidObjects(irDistLeft,irDistRight);
     }
     Serial.println("Stopped on black");
     currentState = STATE_DROP_CYLINDER;
