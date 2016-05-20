@@ -27,8 +27,6 @@ void catch_cylinder(){
       break;
     }
 
-    irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);         // Measure distance
-    irDistRight = irDistance(irLEDPinRight, irRecPinRight);
     
     if (foundCylinder) {
       
@@ -42,7 +40,10 @@ void catch_cylinder(){
       break;
       
     } else {
+      irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);         // Measure distance
+      irDistRight = irDistance(irLEDPinRight, irRecPinRight);
       galvReading = digitalRead(GALV_PIN);
+
       if (galvReading == HIGH) {
         foundCylinder = true;
       } else {
@@ -52,12 +53,17 @@ void catch_cylinder(){
         }
         if (irDistLeft < 0.95 && irDistRight < 0.95) {
           moveStraight(50);
+        } else if (IRTurnCounter >= IRTurnCountThreshold) {
+          moveStraight(50);
         } else if (irDistLeft < 0.8) {
           turnLeftSlow();
+          IRTurnCounter++;
         } else if (irDistRight < 0.8) {
           turnRightSlow();
+          IRTurnCounter++;
         } else {
           moveStraight(50);
+          IRTurnCounter = 0;
         }
       }
       delay(100);

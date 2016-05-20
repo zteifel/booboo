@@ -106,4 +106,7 @@ const int armDown = 30;
 
 int leftWhiskerReading, rightWhiskerReading;
 
+int IRTurnCounter = 0;
+int IRTurnCountThreshold = 6;
+
 #endif
