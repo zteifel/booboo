@@ -94,6 +94,9 @@ const int timeOut_beacon = 10*1000;	// 10sec
 
 // Other
 unsigned long time;
+unsigned long startTime;
+
+const int timeBeforeMoveAround = 1 * 1000 * 60; // 1 minutes
 
 const int msMoveTowardCylinder = 10*1000;
 const int roamingTime = 1.5; // Seconds

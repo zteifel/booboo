@@ -93,4 +93,19 @@ void randomWalk(int a, int b, int walkTime) {		// Walktime in seconds
     delay(50);
   }
 }
+
+void rotateAroundBase(){
+  // a, b is the direction index limits. Index 0 is straight ahead and index 50 is approx a full turn.
+  reverse();    // Go backwards first
+  delay(2500);
+  rotate(clockwise, rotationSpeed);	// Rotate
+  delay(msPerStep * 9); // Approx 45 degrees
+  servoLeft.writeMicroseconds(1500 + 50);
+  servoRight.writeMicroseconds(1500 - 100);
+  delay(8000);
+  rotate(clockwise, rotationSpeed);	// Rotate
+  delay(msPerStep * 9); // Approx 45 degrees
+  stopMovement();
+}
+
 #endif

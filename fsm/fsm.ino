@@ -15,37 +15,37 @@ void setup() {
   Serial.begin(9600);
 
   randomSeed(analogRead(0));
-  
+
   servoLeft.attach(leftServoPin);
   servoRight.attach(rightServoPin);
-  
+
   pinMode(irRecPinLeft, INPUT);  pinMode(irLEDPinLeft, OUTPUT);   // IR LED & Receiver
   pinMode(irRecPinRight, INPUT);  pinMode(irLEDPinRight, OUTPUT);
-  
+
   pinMode(IR_BEACON_L_PIN, INPUT);
   pinMode(IR_BEACON_R_PIN,INPUT);
-  
+
   pinMode(GALV_PIN, INPUT);
   pinMode(stopOnBlackPin, INPUT);
 
-  pinMode(WHISKER_L_PIN, INPUT); 
+  pinMode(WHISKER_L_PIN, INPUT);
   pinMode(WHISKER_R_PIN, INPUT);
-  
+
   servoArm.attach(ARM_SERVO_PIN);
 
   Serial.flush();
 
   servoArm.write(armUp); // Set the arm in diagonal upright position
-  
+
   currentState = STATE_MOVE_AND_AVOID;
 
 }
 
 void loop() {
+  Serial.println(currentState); // DEBUG
 
+  startTime = millis();
 
-  // Serial.println(currentState); // DEBUG
-  
   if (currentState == STATE_MOVE_AND_AVOID) {
     // State 0: Move forward a set number of steps and then go to state 1. Avoid any objects.    
 
@@ -67,7 +67,7 @@ void loop() {
     // stop the robot once the element gets a connection.
     time = millis();
     catch_cylinder();
-    
+
   } else if (currentState == STATE_MOVE_TO_BEACON) {
     // Go towards beacon
     lastBeaconTime = millis();  // Init
@@ -85,19 +85,24 @@ void loop() {
     }
     Serial.println("Stopped on black");
     currentState = STATE_DROP_CYLINDER;
-    
+
   } else if (currentState == STATE_DROP_CYLINDER) {
     // Leave cylinder
     stopMovement();
     delay(500);
     servoArm.write(armUp);
     delay(500);
-    
+
     beep();
-    
+
     // Start a new roam in a random direction
-    reverseAndRandomDir(13, 37);
+    int moveAroundBase = random(0,2);
+    if ( startTime > timeBeforeMoveAround && moveAroundBase > 0 ) {
+      rotateAroundBase();
+    } else {
+      reverseAndRandomDir(13, 37);
+    }
     currentState = STATE_MOVE_AND_AVOID;
   }
-  
+
 }
