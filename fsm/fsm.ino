@@ -50,8 +50,6 @@ void loop() {
     // State 0: Move forward a set number of steps and then go to state 1. Avoid any objects.
 
     catch_cylinder();
-    
-    }
 
     currentState = STATE_PING_SCAN;
     
