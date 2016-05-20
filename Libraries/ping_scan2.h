@@ -34,31 +34,35 @@ int minimum(int measurements[nMeasurements], int intervalLength) {
 bool isCylinder(int measurements[nMeasurements], int intervalLength) {
   int minValue = minimum(measurements, intervalLength);
 
-    if (minValue < 20) {
-        if (intervalLength <= 9) {
-            return true;
-        }else{
-            return false;
-        }
-    }else if(minValue < 30) {
-        if (intervalLength <= 8) {
-            return true;
-        }else{
-            return false;
-        }
-    }else if(minValue < 40) {
-        if (intervalLength <= 7) {
-            return true;
-        }else{
-            return false;
-        }
-    }else{
-        if (intervalLength <= 6) {
-            return true;
-        }else{
-            return false;
-        }
-    }
+  if(minValue < 2){
+    return false;
+  }
+  
+  if (minValue < 20) {
+      if (intervalLength <= 9) {
+          return true;
+      }else{
+          return false;
+      }
+  }else if(minValue < 30) {
+      if (intervalLength <= 8) {
+          return true;
+      }else{
+          return false;
+      }
+  }else if(minValue < 40) {
+      if (intervalLength <= 7) {
+          return true;
+      }else{
+          return false;
+      }
+  }else{
+      if (intervalLength <= 6) {
+          return true;
+      }else{
+          return false;
+      }
+  }
 }
 
 
