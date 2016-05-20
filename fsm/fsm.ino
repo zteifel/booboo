@@ -2,13 +2,14 @@
 #include <Servo.h> // Include servo library
 #include <EEPROM.h>
 #include "declarations.h"
+#include "irDistance.h"
 #include "movement.h"
 #include "beeps.h"
-#include "irDistance.h"
 #include "Avoidance.h"
 #include "IR_beacon_nav.h"
 #include "ping_scan2.h"
 #include "catch_cylinder.h"
+#include "random_walk.h"
 
 void setup() {
 
@@ -75,8 +76,10 @@ void loop() {
     
     while(digitalRead(stopOnBlackPin) == HIGH ){ // Note: the onBlackPaper function didn't work for some reason.
            
-      if(lastBeaconTime - millis() > timeOut_beacon) { // Walk random during 10sec
-        randomWalk(0, 50, 10); // Randomwalk 360 deg during 10sec  
+      if(millis() - lastBeaconTime > timeOut_beacon) { // Walk random during 10sec
+        beep(); 
+        randomWalk(0, 50, 5); // Randomwalk 360 deg during 10sec
+        
       }
       // Scan for cylinder
       checkForBeacon(100);

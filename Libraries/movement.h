@@ -74,25 +74,6 @@ void reverseAndRandomDir(int a, int b){
   stopMovement();
 }
 
-void randomDirection(int a, int b){
-  // a, b is the direction index limits. Index 0 is straight ahead and index 50 is approx a full turn.
-  stopMovement();
-  int randomDir = random(a, b);	// Random dir backwards
-  rotate(clockwise, rotationSpeed);	// Rotate
-  delay(msPerStep * randomDir);
-}
-
-void randomWalk(int a, int b, int walkTime) {		// Walktime in seconds
-  for (int i = 1; i < walkTime*20; i++) {
-    stopMovement();
-    randomDirection(a, b);	// Random 360 dirr
-    irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);         // Measure distance
-    irDistRight = irDistance(irLEDPinRight, irRecPinRight);
-    moveForward();
-    avoidObjects(irDistLeft, irDistRight);
-    delay(50);
-  }
-}
 
 void rotateAroundBase(){
   // a, b is the direction index limits. Index 0 is straight ahead and index 50 is approx a full turn.
