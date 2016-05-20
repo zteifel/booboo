@@ -16,9 +16,9 @@ const int timeOut = 100;
 */
 
 void resetMeasurements(){
-    for(int i=0; i < nMeasurements; i++){
-      measurements[i]=0;
-    }
+  for(int i=0; i < nMeasurements; i++){
+    measurements[i]=0;
+  }
 }
 
 int minimum(int measurements[nMeasurements], int intervalLength) {
@@ -34,31 +34,35 @@ int minimum(int measurements[nMeasurements], int intervalLength) {
 bool isCylinder(int measurements[nMeasurements], int intervalLength) {
   int minValue = minimum(measurements, intervalLength);
 
-    if (minValue < 20) {
-        if (intervalLength <= 9) {
-            return true;
-        }else{
-            return false;
-        }
-    }else if(minValue < 30) {
-        if (intervalLength <= 8) {
-            return true;
-        }else{
-            return false;
-        }
-    }else if(minValue < 40) {
-        if (intervalLength <= 7) {
-            return true;
-        }else{
-            return false;
-        }
-    }else{
-        if (intervalLength <= 6) {
-            return true;
-        }else{
-            return false;
-        }
-    }
+  if(intervalLength < 2){
+    return false;
+  }
+  
+  if (minValue < 20) {
+      if (intervalLength <= 9) {
+          return true;
+      }else{
+          return false;
+      }
+  }else if(minValue < 30) {
+      if (intervalLength <= 8) {
+          return true;
+      }else{
+          return false;
+      }
+  }else if(minValue < 40) {
+      if (intervalLength <= 7) {
+          return true;
+      }else{
+          return false;
+      }
+  }else{
+      if (intervalLength <= 6) {
+          return true;
+      }else{
+          return false;
+      }
+  }
 }
 
 
@@ -66,8 +70,9 @@ bool isCylinder(int measurements[nMeasurements], int intervalLength) {
 
 // State 1: Use the sonar to search and find direction to a cylinder.
 void ping_scan(){
-  
-  while(true){
+  int intervalLength = 0;
+  int i = 1;
+  //while(true){
     
     // If time out, rotate to a random direction and exit to roam state
     if(millis() - time > timeOut_ping){
@@ -97,8 +102,8 @@ void ping_scan(){
     beep2();
     
     // Scan for a left edge
-    int intervalLength = 0;
-    int i = 1;
+    intervalLength = 0;
+    i = 1;
     rotate(counterClockwise, rotationSpeed);
     while(millis() - time < timeOut_ping){
       i++;
@@ -141,7 +146,7 @@ void ping_scan(){
       currentState = STATE_CATCH_CYLINDER;
       return;
     }
-  }
+ // }
   
   /*
   if(scan_steps >= pingTimeOut){
