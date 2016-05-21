@@ -4,18 +4,20 @@
 #include "Arduino.h"
 
 void delayWithIRAvoidance(int delayTime) {
-  for(int i=0; i<delayTime*10; i++) {
+  unsigned long begin = millis();
+  while (millis() - begin < delayTime) {
     irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);
     irDistRight = irDistance(irLEDPinRight, irRecPinRight);
     avoidObjects(irDistLeft, irDistRight);
     delay(100);
-  }  
+  }
 }
 
 void delayWithWhiskerAvoidance(int delayTime) {
-  for(int i=0; i<delayTime*20; i++) {
+  unsigned long begin = millis();
+  while (millis() - begin < delayTime) {
     avoidance_whiskers();
     delay(50);
-  }  
+  }
 }
 #endif
