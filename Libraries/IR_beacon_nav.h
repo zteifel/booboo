@@ -8,6 +8,7 @@ void steerTowardsBeacon(){
   if ((curTime  - beaconLeftTimer <= beaonTimerTreshold) &&
       (curTime  - beaconRightTimer <= beaonTimerTreshold)){
     moveForward();
+    lastPosChangeTimer = millis();
   } else if ((curTime  - beaconLeftTimer > beaonTimerTreshold) &&
 	         (curTime  - beaconRightTimer <= beaonTimerTreshold)){
     turnRightSlow();
@@ -16,19 +17,36 @@ void steerTowardsBeacon(){
   }
 }
 
-void checkForBeacon(int milliseconds){
+void checkForBeacon(){
     beaconLeftVal  = analogRead(IR_BEACON_L_PIN) * analogConversionFactor;  
     beaconRightVal = analogRead(IR_BEACON_R_PIN) * analogConversionFactor;
     
     if(beaconLeftVal == 0) {
       beaconLeftTimer = millis();
-      lastBeaconTime = millis();
     };
     if(beaconRightVal == 0) {
       beaconRightTimer = millis();
-      lastBeaconTime = millis();
     }
+    
+    //lastBeaconTimer = max(beaconLeftTimer, beaconRightTimer);
 }
 
+void moveToBeacon() {
+  lastPosChangeTimer = millis();  // Init
+    
+  while(digitalRead(stopOnBlackPin) == HIGH){ // Note: the onBlackPaper function didn't work for some reason.
+    checkForBeacon();
+    steerTowardsBeacon();   
+    
+    if(millis() - lastPosChangeTimer > timeOut_beacon) {
+      Serial.println("Performing a random walk to find beacon");
+      randomWalk(0, 50, 5); // Randomwalk 360 deg during 5sec, avoiding with IR
+      lastPosChangeTimer = millis();  // Init
+    }
+    avoidObjects(irDistLeft,irDistRight);  // Avoid wall if the beacon signal has bounced
+  }
+  Serial.println("Stopped on black");
+  currentState = STATE_DROP_CYLINDER;
+}
 
 #endif

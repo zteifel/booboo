@@ -35,6 +35,7 @@ void catch_cylinder(){
       
       delay(500);
       servoArm.write(armDown);
+      Serial.println("Catched a cylinder");
       delay(500);
       
       break;

@@ -88,7 +88,7 @@ const float analogConversionFactor = 5.0 / 1024.0;
 const float beaonTimerTreshold = 2000;
 float beaconLeftVal, beaconRightVal;
 float curTime, beaconLeftTimer, beaconRightTimer;
-unsigned long lastBeaconTime;
+unsigned long lastBeaconTimer, lastPosChangeTimer;
 const int timeOut_beacon = 10*1000;	// 10sec
 
 

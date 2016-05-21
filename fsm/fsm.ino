@@ -1,4 +1,3 @@
-
 #include <Servo.h> // Include servo library
 #include <EEPROM.h>
 #include "declarations.h"
@@ -6,10 +5,10 @@
 #include "movement.h"
 #include "beeps.h"
 #include "Avoidance.h"
+#include "random_walk.h"
 #include "IR_beacon_nav.h"
 #include "ping_scan2.h"
 #include "catch_cylinder.h"
-#include "random_walk.h"
 
 void setup() {
 
@@ -71,23 +70,7 @@ void loop() {
 
   } else if (currentState == STATE_MOVE_TO_BEACON) {
     // Go towards beacon
-    lastBeaconTime = millis();  // Init
-    steerTowardsBeacon();
-    
-    while(digitalRead(stopOnBlackPin) == HIGH ){ // Note: the onBlackPaper function didn't work for some reason.
-           
-      if(millis() - lastBeaconTime > timeOut_beacon) { // Walk random during 10sec
-        beep(); 
-        randomWalk(0, 50, 5); // Randomwalk 360 deg during 10sec
-        
-      }
-      // Scan for cylinder
-      checkForBeacon(100);
-      steerTowardsBeacon();
-      //avoidObjects(irDistLeft,irDistRight);
-    }
-    Serial.println("Stopped on black");
-    currentState = STATE_DROP_CYLINDER;
+    moveToBeacon();
 
   } else if (currentState == STATE_DROP_CYLINDER) {
     // Leave cylinder
@@ -96,7 +79,7 @@ void loop() {
     servoArm.write(armUp);
     delay(500);
 
-    beep();
+    beep3();  // Beep if dropped of a cylinder at base
 
     // Start a new roam in a random direction
     int moveAroundBase = random(0,2);
