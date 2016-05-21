@@ -53,7 +53,7 @@ void moveForwardSlow() {
 }
 
 // Rotates continually
-// Note: a full turn is about 7 seconds with speed setting 25. (TODO double check this)
+// Note: a full turn is about 8 seconds with speed setting 25.
 void rotate(bool clockwise, int speed){
   if(clockwise){
     servoLeft.writeMicroseconds(1500 + speed);
@@ -65,7 +65,6 @@ void rotate(bool clockwise, int speed){
 }
 
 void rotateAroundBase(){
-  // a, b is the direction index limits. Index 0 is straight ahead and index 50 is approx a full turn.
   reverse();    // Go backwards first
   delay(2500);
   rotate(clockwise, rotationSpeed);	// Rotate

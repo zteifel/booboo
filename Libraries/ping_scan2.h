@@ -68,7 +68,6 @@ bool isCylinder(int measurements[nMeasurements], int intervalLength) {
 
 // OBS! Ta inte bort serial-println-raderna! Programmet funkar inte utan dem (otroligt konstigt).
 
-// State 1: Use the sonar to search and find direction to a cylinder.
 void ping_scan(){
   int intervalLength = 0;
   int i = 1;
@@ -150,16 +149,6 @@ void ping_scan(){
       return;
     }
  // }
-  
-  /*
-  if(scan_steps >= pingTimeOut){
-    rotate(clockwise, rotationSpeed);
-    delay(msPerStep * intervalLength/2);
-    stopMovement();
-    return;
-  }
-  */
-  
 }
 
 #endif

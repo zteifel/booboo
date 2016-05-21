@@ -7,8 +7,6 @@
 #include "Arduino.h"
 #include "avoidance_whiskers.h"
 
-// State 2: Move towards a cylinder using IR to correct the path,
-    // stop the robot once the element gets a connection.
 void catch_cylinder(){
   bool foundCylinder = false;
     
