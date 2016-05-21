@@ -50,8 +50,8 @@ void loop() {
   
   if (currentState == STATE_MOVE_AND_AVOID) {
     
-    randomWalk(0,0,5);  // Go forward dir during 3 sec
     currentState = STATE_PING_SCAN;
+    randomWalk(0,0,5);  // Go forward dir during 3 sec
     
   } else if (currentState == STATE_PING_SCAN) {
     

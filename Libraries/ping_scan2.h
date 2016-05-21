@@ -89,7 +89,7 @@ void ping_scan(){
     Serial.println("Latest measurement: "+String(measurements[1])); // DEBUG
     
     // Scan for a right edge
-    rotate(counterClockwise, rotationSpeed);
+    rotate(ping_scan_rotate_dir, rotationSpeed);
     while(millis() - time < timeOut_ping){
       measurements[0] = measurements[1];
       measurements[1] = measurePingDist();

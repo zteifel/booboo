@@ -9,9 +9,9 @@
 
 void catch_cylinder(){
   bool foundCylinder = false;
-    
+
   while(true){
-  
+
     if(millis() - time > msMoveTowardCylinder){
       currentState = STATE_PING_SCAN;
       Serial.println("Catch cylinder timed out");
@@ -27,50 +27,44 @@ void catch_cylinder(){
       break;
     }
 
-    
-    if (foundCylinder) {
-      
+    galvReading = digitalRead(GALV_PIN);
+    if (galvReading == HIGH) {
       stopMovement();
-      currentState = STATE_MOVE_TO_BEACON;
-      
+
       delay(500);
       servoArm.write(armDown);
       Serial.println("Catched a cylinder");
       delay(500);
-      
-      break;
-      
-    } else {
-      irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);         // Measure distance
-      irDistRight = irDistance(irLEDPinRight, irRecPinRight);
-      galvReading = digitalRead(GALV_PIN);
 
-      if (galvReading == HIGH) {
-        foundCylinder = true;
-      } else {
-        if(avoidance_whiskers()) {
-          currentState = STATE_MOVE_AND_AVOID;
-          break;
-        }
-        if (irDistLeft < 0.95 && irDistRight < 0.95) {
-          moveStraight(50);
-        } else if (IRTurnCounter >= IRTurnCountThreshold) {
-          moveStraight(50);
-        } else if (irDistLeft < 0.8) {
-          turnLeftSlow();
-          IRTurnCounter++;
-        } else if (irDistRight < 0.8) {
-          turnRightSlow();
-          IRTurnCounter++;
-        } else {
-          moveStraight(50);
-          IRTurnCounter = 0;
-        }
-      }
-      delay(100);
+      currentState = STATE_MOVE_TO_BEACON;
+      break;
     }
+
+    if(avoidance_whiskers()) {
+      currentState = STATE_MOVE_AND_AVOID;
+      break;
+    }
+
+    irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);
+    irDistRight = irDistance(irLEDPinRight, irRecPinRight);
+
+    if (irDistLeft < 1.1 && irDistRight < 1.1) {
+      moveStraight(50);
+    } else if (IRTurnCounter >= IRTurnCountThreshold) {
+      moveStraight(50);
+    } else if (irDistLeft < 0.8) {
+      turnLeftSlow();
+      IRTurnCounter++;
+    } else if (irDistRight < 0.8) {
+      turnRightSlow();
+      IRTurnCounter++;
+    } else {
+      moveStraight(50);
+      IRTurnCounter = 0;
+    }
+
+    delay(100);
   }
-  
 }
 
 #endif
