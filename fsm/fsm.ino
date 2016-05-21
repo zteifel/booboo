@@ -5,6 +5,7 @@
 #include "movement.h"
 #include "beeps.h"
 #include "Avoidance.h"
+#include "avoidance_whiskers.h"
 #include "random_walk.h"
 #include "IR_beacon_nav.h"
 #include "ping_scan2.h"
@@ -49,7 +50,7 @@ void loop() {
   if (currentState == STATE_MOVE_AND_AVOID) {
     // State 0: Move forward a set number of steps and then go to state 1. Avoid any objects.    
 
-    randomWalk(0,0,roamingTime);  // Walk straight ahead during 1.5sec
+    randomWalk(0,50,3);  // Go a random dir during 3 sec
 
     currentState = STATE_PING_SCAN;
     

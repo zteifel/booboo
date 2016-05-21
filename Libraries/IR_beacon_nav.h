@@ -40,7 +40,7 @@ void moveToBeacon() {
     
     if(millis() - lastPosChangeTimer > timeOut_beacon) {
       Serial.println("Performing a random walk to find beacon");
-      randomWalk(0, 50, 5); // Randomwalk 360 deg during 5sec, avoiding with IR
+      randomWalk(0, 50, 5); // Randomwalk 360 deg during 5sec
       lastPosChangeTimer = millis();  // Init
     }
     avoidObjects(irDistLeft,irDistRight);  // Avoid wall if the beacon signal has bounced

@@ -76,8 +76,11 @@ void ping_scan(){
     
     // If time out, rotate to a random direction and exit to roam state
     if(millis() - time > timeOut_ping){
-      reverseAndRandomDir(0,50);
+      //reverseAndRandomDir(0,50);  // We do not know where we came from, dangerous to reverse here
       currentState = STATE_MOVE_AND_AVOID;
+      
+      //randomWalk(0, 50, 5); // Go a random dir 5sec to a new position
+      //time = millis(); // Start over
       return;
     }
     
