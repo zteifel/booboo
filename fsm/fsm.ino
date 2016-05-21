@@ -40,13 +40,13 @@ void setup() {
   servoArm.write(armUp); // Set the arm in upright position
 
   currentState = STATE_MOVE_AND_AVOID;
+  
+  startTime = millis();
 
 }
 
 void loop() {
   Serial.println(currentState); // DEBUG
-  
-  startTime = millis();
   
   if (currentState == STATE_MOVE_AND_AVOID) {
     
