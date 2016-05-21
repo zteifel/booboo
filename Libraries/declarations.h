@@ -106,6 +106,8 @@ int galvReading = 0;
 const bool clockwise        = true;
 const bool counterClockwise = false;
 
+bool ping_scan_rotate_dir = clockwise;
+
 const int armUp = 90;
 const int armDown = 0;
 

@@ -29,25 +29,45 @@ void randomWalk(int a, int b, int walkTime) {		// Walktime in seconds
   stopMovement();
   randomDirection(a, b);  // Random 360 dirr
   for (int i = 1; i < walkTime*10; i++) {
-    
+
     moveForward();
     if(currentState == STATE_MOVE_TO_BEACON) {  // Already have a cylinder, avoiding with IR
       irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);
       irDistRight = irDistance(irLEDPinRight, irRecPinRight);
       avoidObjects(irDistLeft, irDistRight);
-      
+
       if(digitalRead(stopOnBlackPin) == LOW) {  // Drop cylinder if accidently go over black
         currentState = STATE_DROP_CYLINDER;
         break;
       }
-      
+
     } else {  // Dont have a cylinder, avoiding with whiskers and checking if accidently hit a cylinder
+
       galvReading = digitalRead(GALV_PIN);
       if (galvReading == HIGH) {
+          Serial.println("galvad");
           currentState = STATE_CATCH_CYLINDER;
           break;
       }
+
       avoidance_whiskers();
+
+      // Check for cylinders close by
+      irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);
+      irDistRight = irDistance(irLEDPinRight, irRecPinRight);
+
+      if (irDistLeft < 0.95) {
+        Serial.println("ir left");
+        ping_scan_rotate_dir = counterClockwise;
+        currentState = STATE_PING_SCAN;
+        break;
+      }
+      else if (irDistRight < 0.95) {
+        Serial.println("ir right");
+        ping_scan_rotate_dir = clockwise;
+        currentState = STATE_PING_SCAN;
+        break;
+      }
     }
     delay(100);
   }
