@@ -15,6 +15,11 @@ void stopMovement() {
   servoRight.writeMicroseconds(1500);
 }
 
+void moveStraight(int speed){
+    servoLeft.writeMicroseconds(1500 + speed);
+    servoRight.writeMicroseconds(1500 - speed);
+}
+
 void turnLeft() {
   servoLeft.writeMicroseconds(servoLeftBackward);
   servoRight.writeMicroseconds(servoRightForward);
@@ -58,22 +63,6 @@ void rotate(bool clockwise, int speed){
     servoRight.writeMicroseconds(1500 - speed);
   }
 }
-
-void moveStraight(int speed){
-    servoLeft.writeMicroseconds(1500 + speed);
-    servoRight.writeMicroseconds(1500 - speed);
-}
-
-void reverseAndRandomDir(int a, int b){
-  // a, b is the direction index limits. Index 0 is straight ahead and index 50 is approx a full turn.
-  reverse();	// Go backwards first
-  delay(1000);
-  int randomDir = random(a, b);	// Random dir backwards
-  rotate(clockwise, rotationSpeed);	// Rotate
-  delay(msPerStep * randomDir);
-  stopMovement();
-}
-
 
 void rotateAroundBase(){
   // a, b is the direction index limits. Index 0 is straight ahead and index 50 is approx a full turn.

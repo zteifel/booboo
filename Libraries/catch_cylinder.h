@@ -16,14 +16,16 @@ void catch_cylinder(){
   
     if(millis() - time > msMoveTowardCylinder){
       currentState = STATE_PING_SCAN;
-      Serial.println("Catch cylinder time out.");
+      Serial.println("Catch cylinder timed out");
       break;
     }
 
     if(digitalRead(stopOnBlackPin) == LOW){		// Do a random walk
       Serial.println("Trying to catch an already captured cylinder");
-      reverseAndRandomDir(13, 37);
-      currentState = STATE_MOVE_AND_AVOID;
+      reverse();	// Go backwards first
+      delay(1000);
+      randomWalk(0,50,5);  // Random dir in 5sec to get a new position
+      currentState = STATE_PING_SCAN;  // Search for a new cylinder
       break;
     }
 
