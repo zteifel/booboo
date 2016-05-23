@@ -1,6 +1,7 @@
 #include <Servo.h> // Include servo library
 #include <EEPROM.h>
 #include "declarations.h"
+#include "onBlackPaper.h"
 #include "irDistance.h"
 #include "movement.h"
 #include "beeps.h"

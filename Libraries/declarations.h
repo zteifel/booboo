@@ -119,6 +119,6 @@ int IRTurnCounter = 0;
 int IRTurnCountThreshold = 6;
 
 int stopOnBlackCount = 0;
-const int stopOnBlackThreshold = 1;
+const int stopOnBlackThreshold = 2;
 
 #endif

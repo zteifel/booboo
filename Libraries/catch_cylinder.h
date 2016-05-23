@@ -18,7 +18,7 @@ void catch_cylinder(){
       break;
     }
 
-    if(digitalRead(stopOnBlackPin) == LOW){		// Do a random walk
+    if( onBlackPaper() ){		// Do a random walk
       Serial.println("Trying to catch an already captured cylinder");
       reverse();	// Go backwards first
       delay(1000);

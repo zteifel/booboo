@@ -39,7 +39,7 @@ void checkForBeacon(){
 void moveToBeacon() {
   lastPosChangeTimer = millis();  // Init
     
-  while(stopOnBlackCount < stopOnBlackThreshold){ // Note: the onBlackPaper function didn't work for some reason.
+  while( onBlackPaper() == false){ // Note: the onBlackPaper function didn't work for some reason.
     checkForBeacon();
     steerTowardsBeacon();
 

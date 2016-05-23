@@ -38,7 +38,7 @@ void randomWalk(int a, int b, int walkTime) {		// Walktime in seconds
       }
       //avoidance_whiskers();
 
-      if(digitalRead(stopOnBlackPin) == LOW) {  // Drop cylinder if accidently go over black
+      if( onBlackPaper() ) {  // Drop cylinder if accidently go over black
         currentState = STATE_DROP_CYLINDER;
         break;
       }
