@@ -30,11 +30,12 @@ void randomWalk(int a, int b, int walkTime) {		// Walktime in seconds
   randomDirection(a, b);  // Random 360 dirr
   for (int i = 1; i < walkTime*10; i++) {
 
-    moveForward();
     if(currentState == STATE_MOVE_TO_BEACON) {  // Already have a cylinder, avoiding with IR
       irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);
       irDistRight = irDistance(irLEDPinRight, irRecPinRight);
-      avoidObjects(irDistLeft, irDistRight);
+      if(!avoidObjects(irDistLeft, irDistRight)) {
+        moveForward();
+      }
       //avoidance_whiskers();
 
       if(digitalRead(stopOnBlackPin) == LOW) {  // Drop cylinder if accidently go over black
@@ -43,6 +44,7 @@ void randomWalk(int a, int b, int walkTime) {		// Walktime in seconds
       }
 
     } else {  // Dont have a cylinder, avoiding with whiskers and checking if accidently hit a cylinder
+      moveForward();
 
       galvReading = digitalRead(GALV_PIN);
       if (galvReading == HIGH) {

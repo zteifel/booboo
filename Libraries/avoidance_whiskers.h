@@ -19,16 +19,15 @@ bool avoidance_whiskers() {
     reverse();
     delay(500);
     turnRightSlow();
-    delay(1300);
+    delay(1500);
     return true;
   } else if (rightWhiskerReading == HIGH) {
     reverse();
     delay(500);
     turnLeftSlow();
-    delay(1300);
+    delay(1500);
     return true;
   } else {
-    moveForward();
     return false;
   }
 }

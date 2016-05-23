@@ -7,7 +7,12 @@ void steerTowardsBeacon(){
   curTime = millis();
   if ((curTime  - beaconLeftTimer <= beaonTimerTreshold) &&
       (curTime  - beaconRightTimer <= beaonTimerTreshold)){
-    moveForward();
+    irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);
+    irDistRight = irDistance(irLEDPinRight, irRecPinRight);    
+    if (!avoidObjects(irDistLeft, irDistRight)){
+      moveForward();
+    }
+    delay(100);
     lastPosChangeTimer = millis();
   } else if ((curTime  - beaconLeftTimer > beaonTimerTreshold) &&
 	         (curTime  - beaconRightTimer <= beaonTimerTreshold)){
@@ -49,7 +54,6 @@ void moveToBeacon() {
       randomWalk(0, 50, 5); // Randomwalk 360 deg during 5sec
       lastPosChangeTimer = millis();  // Init
     }
-    avoidObjects(irDistLeft,irDistRight);  // Avoid wall if the beacon signal has bounced
   }
   Serial.println("Stopped on black");
   stopOnBlackCount = 0;

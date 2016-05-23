@@ -12,6 +12,8 @@
 #include "ping_scan2.h"
 #include "catch_cylinder.h"
 
+// NYA
+
 void setup() {
 
   Serial.begin(9600);
@@ -90,7 +92,7 @@ void loop() {
     servoArm.write(armUp);
     delay(500);
     
-    beep3();  // Beep if dropped of a cylinder at base
+    beep();  // Beep if dropped of a cylinder at base
     
     // Start a new roam in a random direction
     int moveAroundBase = random(0,2);

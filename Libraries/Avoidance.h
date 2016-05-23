@@ -4,7 +4,7 @@
 #define AVOIDANCE_H
 
 
-void avoidObjects(float irDistLeft, float irDistRight) {
+bool avoidObjects(float irDistLeft, float irDistRight) {
 
 
   if (irDistLeft < irDistThreshold && irDistRight < irDistThreshold) {
@@ -13,14 +13,17 @@ void avoidObjects(float irDistLeft, float irDistRight) {
     Serial.print(irDistLeft);
     Serial.print("  ");
     Serial.println(irDistRight);
+    return true;
   } else if (irDistLeft < irDistThreshold) {
     turnRight();
     //Serial.println("Right");
+    return true;
   } else if (irDistRight < irDistThreshold) {
     turnLeft();
     //Serial.println("Left");
-  //} else {
-    //moveForward();
+    return true;
+  } else {
+    return false;
   }
 }
 
