@@ -35,6 +35,7 @@ void randomWalk(int a, int b, int walkTime) {		// Walktime in seconds
       irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);
       irDistRight = irDistance(irLEDPinRight, irRecPinRight);
       avoidObjects(irDistLeft, irDistRight);
+      //avoidance_whiskers();
 
       if(digitalRead(stopOnBlackPin) == LOW) {  // Drop cylinder if accidently go over black
         currentState = STATE_DROP_CYLINDER;
@@ -50,24 +51,30 @@ void randomWalk(int a, int b, int walkTime) {		// Walktime in seconds
           break;
       }
 
-      avoidance_whiskers();
-
-      // Check for cylinders close by
-      irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);
-      irDistRight = irDistance(irLEDPinRight, irRecPinRight);
-
-      if (irDistLeft < 0.95) {
-        Serial.println("ir left");
-        ping_scan_rotate_dir = counterClockwise;
-        currentState = STATE_PING_SCAN;
-        break;
+      if (avoidance_whiskers()) {
+        avoidedWallTimer = millis();
       }
-      else if (irDistRight < 0.95) {
-        Serial.println("ir right");
-        ping_scan_rotate_dir = clockwise;
-        currentState = STATE_PING_SCAN;
-        break;
-      }
+/*
+
+      if (millis() - avoidedWallTimer > avoidedWallTimerThreshold) {
+        
+        // Check for cylinders close by
+        irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);
+        irDistRight = irDistance(irLEDPinRight, irRecPinRight);
+
+        if (irDistLeft < 0.6) {
+          Serial.println("ir left");
+          ping_scan_rotate_dir = counterClockwise;
+          currentState = STATE_PING_SCAN;
+          break;
+        }
+        else if (irDistRight < 0.6) {
+          Serial.println("ir right");
+          ping_scan_rotate_dir = clockwise;
+          currentState = STATE_PING_SCAN;
+          break;
+        }
+      }*/
     }
     delay(100);
   }

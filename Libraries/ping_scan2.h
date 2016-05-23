@@ -106,7 +106,7 @@ void ping_scan(){
     // Scan for a left edge
     intervalLength = 0;
     i = 1;
-    rotate(counterClockwise, rotationSpeed);
+    rotate(ping_scan_rotate_dir, rotationSpeed);
     while(millis() - time < timeOut_ping){
       i++;
       intervalLength++;
@@ -141,8 +141,12 @@ void ping_scan(){
     // Check if the interval is a cylinder and rotate towards it
     if(isCylinder(measurements, intervalLength)){
     //if(intervalLength < maxCylWidth){
-      rotate(clockwise, rotationSpeed);
-      delay(msPerStep * intervalLength/2);
+      if (ping_scan_rotate_dir == clockwise){
+        rotate(counterClockwise, rotationSpeed);
+      }else{
+        rotate(clockwise, rotationSpeed);
+      }
+      delay(msPerStep * (intervalLength/2 + 2));
       stopMovement();
       beep();
       currentState = STATE_CATCH_CYLINDER;

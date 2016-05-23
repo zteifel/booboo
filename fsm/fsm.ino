@@ -49,11 +49,16 @@ void loop() {
   Serial.println(currentState); // DEBUG
   
   if (currentState == STATE_MOVE_AND_AVOID) {
+
+    Serial.println("State: Move and avoid");
     
     currentState = STATE_PING_SCAN;
     randomWalk(0,0,5);  // Go forward dir during 3 sec
     
   } else if (currentState == STATE_PING_SCAN) {
+
+    Serial.println("State: ping scan");
+
     
     time = millis();
     while(true){
@@ -63,15 +68,22 @@ void loop() {
     }
     
   } else if (currentState == STATE_CATCH_CYLINDER) {
+
+    Serial.println("State: catch cylinder");
     
     time = millis();
     catch_cylinder();
     
   } else if (currentState == STATE_MOVE_TO_BEACON) {
+
+    Serial.println("State: move to beacon");
     
     moveToBeacon();
 
   } else if (currentState == STATE_DROP_CYLINDER) {
+
+    Serial.println("State: drop cylinder");
+    
     // Leave cylinder
     stopMovement();
     delay(500);

@@ -48,14 +48,14 @@ void catch_cylinder(){
     irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);
     irDistRight = irDistance(irLEDPinRight, irRecPinRight);
 
-    if (irDistLeft < 1.1 && irDistRight < 1.1) {
+    if (irDistLeft < 0.6 && irDistRight < 0.6) {
       moveStraight(50);
     } else if (IRTurnCounter >= IRTurnCountThreshold) {
       moveStraight(50);
-    } else if (irDistLeft < 0.8) {
+    } else if (irDistLeft < 0.5) {
       turnLeftSlow();
       IRTurnCounter++;
-    } else if (irDistRight < 0.8) {
+    } else if (irDistRight < 0.5) {
       turnRightSlow();
       IRTurnCounter++;
     } else {

@@ -34,9 +34,15 @@ void checkForBeacon(){
 void moveToBeacon() {
   lastPosChangeTimer = millis();  // Init
     
-  while(digitalRead(stopOnBlackPin) == HIGH){ // Note: the onBlackPaper function didn't work for some reason.
+  while(stopOnBlackCount < stopOnBlackThreshold){ // Note: the onBlackPaper function didn't work for some reason.
     checkForBeacon();
-    steerTowardsBeacon();   
+    steerTowardsBeacon();
+
+    if (digitalRead(stopOnBlackPin) == LOW) {
+      stopOnBlackCount++;
+    } else {
+      stopOnBlackCount = 0;
+    }
     
     if(millis() - lastPosChangeTimer > timeOut_beacon) {
       Serial.println("Performing a random walk to find beacon");
@@ -46,6 +52,7 @@ void moveToBeacon() {
     avoidObjects(irDistLeft,irDistRight);  // Avoid wall if the beacon signal has bounced
   }
   Serial.println("Stopped on black");
+  stopOnBlackCount = 0;
   currentState = STATE_DROP_CYLINDER;
 }
 

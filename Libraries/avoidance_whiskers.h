@@ -10,6 +10,7 @@ bool avoidance_whiskers() {
   
   if (leftWhiskerReading == HIGH && rightWhiskerReading == HIGH) {
     reverse();
+    Serial.println("Whisker Avoidance: Reversing");
     delay(500);
     turnLeftSlow();
     delay(2000);
@@ -27,6 +28,7 @@ bool avoidance_whiskers() {
     delay(1300);
     return true;
   } else {
+    moveForward();
     return false;
   }
 }
