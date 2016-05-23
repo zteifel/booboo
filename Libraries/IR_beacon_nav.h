@@ -44,12 +44,6 @@ void moveToBeacon() {
     checkForBeacon();
     steerTowardsBeacon();
 
-    if (digitalRead(stopOnBlackPin) == LOW) {
-      stopOnBlackCount++;
-    } else {
-      stopOnBlackCount = 0;
-    }
-    
     if(millis() - lastPosChangeTimer > timeOut_beacon) {
       Serial.println("Performing a random walk to find beacon");
       randomWalk(0, 50, 5); // Randomwalk 360 deg during 5sec
