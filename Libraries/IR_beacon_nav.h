@@ -14,9 +14,10 @@ void steerTowardsBeacon(){
     }
     delay(100);
     lastPosChangeTimer = millis();
-  } else if ((curTime  - beaconLeftTimer > beaonTimerTreshold) &&
-	         (curTime  - beaconRightTimer <= beaonTimerTreshold)){
-    turnRightSlow();
+  //} 
+  //else if ((curTime  - beaconLeftTimer > beaonTimerTreshold) &&
+  //           (curTime  - beaconRightTimer <= beaonTimerTreshold)){
+  //  turnRightSlow();
   } else {
     turnLeftSlow();
   }
