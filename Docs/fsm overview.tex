@@ -1,0 +1,118 @@
+%% LyX 2.0.8 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{array}
+\usepackage{rotating}
+\usepackage{multirow}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+\newcommand{\noun}[1]{\textsc{#1}}
+%% Because html converters don't know tabularnewline
+\providecommand{\tabularnewline}{\\}
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+\begin{tabular}{|c|c|c|c|c|c|}
+\cline{2-6} 
+\multicolumn{1}{c|}{} & \begin{sideways}
+\noun{Move and avoid}
+\end{sideways} & \begin{sideways}
+\noun{Ping scan}
+\end{sideways} & \begin{sideways}
+\noun{Catch Cylinder}
+\end{sideways} & \begin{sideways}
+\noun{Return to beacon}
+\end{sideways} & \begin{sideways}
+\noun{Drop cylinder}
+\end{sideways}\tabularnewline
+\hline 
+\begin{sideways}
+\noun{Move and avoid}
+\end{sideways} & \begin{sideways}
+\rule[0.5ex]{1cm}{1pt}
+\end{sideways} & \begin{sideways}
+Timeout
+\end{sideways} & \begin{sideways}
+Galvan
+\end{sideways} & \begin{sideways}
+\rule[0.5ex]{1cm}{1pt}
+\end{sideways} & \begin{sideways}
+Stop on black
+\end{sideways}\tabularnewline
+\hline 
+\multirow{2}{*}{\begin{sideways}
+\noun{Ping scan}
+\end{sideways}} & \multirow{2}{*}{\begin{sideways}
+Timeout
+\end{sideways}} & \multirow{2}{*}{\begin{sideways}
+\rule[0.5ex]{1cm}{1pt}
+\end{sideways}} & \begin{sideways}
+Found possible 
+\end{sideways} & \multirow{2}{*}{\begin{sideways}
+\rule[0.5ex]{1cm}{1pt}
+\end{sideways}} & \multirow{2}{*}{\begin{sideways}
+\rule[0.5ex]{1cm}{1pt}
+\end{sideways}}\tabularnewline
+ &  &  & \begin{sideways}
+cylinder
+\end{sideways} &  & \tabularnewline
+\hline 
+\multirow{2}{*}{\begin{sideways}
+\noun{Catch Cylinder}
+\end{sideways}} & \multirow{2}{*}{\begin{sideways}
+Whisker avoidance
+\end{sideways}} & \begin{sideways}
+Timeout \emph{or} 
+\end{sideways} & \multirow{2}{*}{\begin{sideways}
+\rule[0.5ex]{1cm}{1pt}
+\end{sideways}} & \multirow{2}{*}{\begin{sideways}
+Galvan%
+\footnote{First lower the arm%
+}
+\end{sideways}} & \multirow{2}{*}{\begin{sideways}
+\rule[0.5ex]{1cm}{1pt}
+\end{sideways}}\tabularnewline
+ &  & \begin{sideways}
+stop on black%
+\footnote{If stop on black, first random walk in a random direction%
+}
+\end{sideways} &  &  & \tabularnewline
+\hline 
+\begin{sideways}
+\noun{Return to beacon}
+\end{sideways} & \begin{sideways}
+\rule[0.5ex]{1cm}{1pt}
+\end{sideways} & \begin{sideways}
+\rule[0.5ex]{1cm}{1pt}
+\end{sideways} & \begin{sideways}
+\rule[0.5ex]{1cm}{1pt}
+\end{sideways} & \begin{sideways}
+\rule[0.5ex]{1cm}{1pt}
+\end{sideways} & \begin{sideways}
+Stop on black
+\end{sideways}\tabularnewline
+\hline 
+\begin{sideways}
+\noun{Drop cylinder}
+\end{sideways} & \begin{sideways}
+Always%
+\footnote{Raises arm, reverses and rotates. May move around the beacon%
+}
+\end{sideways} & \begin{sideways}
+\rule[0.5ex]{1cm}{1pt}
+\end{sideways} & \begin{sideways}
+\rule[0.5ex]{1cm}{1pt}
+\end{sideways} & \begin{sideways}
+\rule[0.5ex]{1cm}{1pt}
+\end{sideways} & \begin{sideways}
+\rule[0.5ex]{1cm}{1pt}
+\end{sideways}\tabularnewline
+\hline 
+\end{tabular}
+\end{document}
