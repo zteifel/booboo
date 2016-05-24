@@ -1,0 +1,25 @@
+\section{The hardware}
+The idea behind the design of our rescue robot Booboo was to keep it as simple and robust as possible. We implemented this idea by using as few movable part as possible and keeping the sensors simple. The reason was to avoid a situation where there robot is in a malfunctioning state due to broken hardware. This robustness is importance in a foreign and chaotic environment such as the one search and rescue robot is suppose to work in. However this robot was of course only intended for educational use in a small training arena, nevertheless the basic idea of robustness is still valid. 
+
+The foundation of the robot was built using the Robot Shield with Arduino kit from Parallax Inc. 
+
+\subsection{Actuators}
+The robot is a two wheeled differentially steered autonomous robot equipped with two continues servo motors with attached wheels. In additional to the servo motors for the wheels, one other servo motor was used to control an arm to catch and hold the cylinders used as rescue victims. 
+
+\subsection{Sensors}
+We equipped the robot with multiple different sensors for different purposes. Here it is specified what sensors was used. The more in depth algorithm using the sensors is described later.
+
+\subsubsection{Mechanical Whiskers}
+For avoidance and also to use as a way to steer cylinders to the robot while moving, two whiskers was used. The circuit connected to each whiskers closed when the whisker was bent backwards, such as when hitting a wall. 
+
+\subsubsection{Galvanic Sensors}
+In order to detect if a cylinder was in the position for the robot to lock it in a simple galvanic sensors indicated if an object allowed current to flow through it. This was primarily used to seperate a wooden wall from the metallic cylinders in the arena.
+
+\subsubsection{Photo Sensor}
+For the robot to detect if it was in a the base (black surface on the floor) the robot was equipped with a photo-transistor and an LED light source to measure the reflectiveness of the surface.
+
+\subsubsection{IR Sensors}
+We used two sets of IR sensors, two active in the front facing in 45 degrees angles outwards to the front to detect obstacles such as walls and victims (cylinders). Another set of two passive IR sensors was mounted on top of the robot, both facing forward but with a shield wall in between. These was used to detect the IR beacon position in the base.
+
+\subsubsection{Ultrasonic Sensor}
+To find cylinders we mainly used an ultrasonic sensor mounted in the front of the robot. No motor was used to rotate the sensor instead we rotated the whole robot in a continuous fashion.

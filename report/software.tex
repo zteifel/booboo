@@ -1,0 +1,48 @@
+
+\section{The Brain - Final state machine FSM}
+The highest level abstraction of the robots brain was a FSM with 5 different states for different stages of collecting the cylinders to the base. The states is described individually below.
+
+\subsection{Move and Avoid - 1}
+This state used as initial state. In this state the robot performs a straight movement in a random direction. It uses the front IR headlights to look for cylinders as it goes. If the IR headlights gives a reading above a certain threshold it goes into state 2 to localize the cylinder.
+If the galvanic sensor gives an indication, a cylinder is assumed to be in front of the robot and hence the new state is 3 to try and catch the cylinder.
+
+In order for the robot to not hit the walls, the whiskers was used in an avoidance algorithm. The algorithm is described more in dept in the next section.
+
+\subsection{Ping Scan - 2}
+This is the state where the robot rotates continuously with trying to locating cylinders in the vicinity by using the Ultrasonic sensors. If a cylinder is thought to have been located, it activates state 3, to catch a cylinder. The algorithm used is described in more depth below.
+
+
+
+\subsection{Catch Cylinder - 3}
+Now the robot suspects it has found a cylinder in front of it and it start to move in the direction towards where it believes the cylinder is. The IR headlights is used now, not as avoidance, but to calibrate the direction of the robot moving towards the cylinder. If the right IR headlight gives a reading the robot steer more to the left and to the right if the left IR headlight gives a reading instead. This goes on until the galvanic sensor gives a reading and the robot believes a cylinder is in front, then the arm is lowered to lock in the cylinder and state 4 is activated so that the robot starts the process of returning to the base with the cylinder.
+
+If a cylinder is not found within a certain time, the catching of a cylinder times out and instead the Ping Scan state is activated in hope of locating the cylinder again.
+
+To prevent the robot from accidentally catching a cylinder already in the base, it checks the readings of the photo sensors mounted below the robot to make sure it is not above black surface, if it is it reverses out of the area and goes into state 1.
+
+In order for the robot to not hit the walls, the whiskers was used in an avoidance algorithm. The algorithm is described more in dept in the next section.
+
+\subsection{Return To Beacon - 4}
+When a cylinder has been caught the robot needs to return to the base to drop it off. In order to navigate to the base the robot uses the two passive IR sensors to look for the IR beacon positioned in the center of the base. The state is initiated by the robot rotating on the current position. If a reading is received the robot rotates in the direction of the IR sensor that got the reading. When both the IR sensors gives a reading the robot starts it movements towards the IR source. It does this while reading the IR sensors, if the robot accidentally steers in the wrong direction and it goes back to only get a reading on one of the sensors it adjusts its direction according to the previous description. 
+
+If no reading can be found even after rotating full rounds the robot instead moves in a random direction in hope to find a spot where it will be able to see the IR beacon.
+
+In order to know when to release the cylinder, the photo sensors below the robot is used to look for dark surface. When a dark surface is found, the state is changed to Drop Cylinder.
+
+In order for the robot to not hit the walls, the IR headlights was used in an avoidance algorithm. The algorithm is described more in dept in the next section.
+
+
+\subsection{Drop cylinder - 5}
+ When it finds a dark surface, the arm is raised and the robot reuses out of the base area and rotates around and goes into state 1 to roam the arena to find more cylinders.
+ 
+ To prevent the robot from only rescuing cylinders from one side of the arena the robot could sometimes move around the base and staring the roaming in state 1 on the other side. The condition for this to happen was changed a bit during the competition in the arena but was finally set be on every third drop off. 
+ 
+ \section{Algorithms explained}
+ 
+ Due to the simplicity of the hardware design of the robot the demands of clever algorithms was higher to avoid deadlock states. The algorithms used for different possible scenarios of that nature is described below
+ 
+ \subsection{Obstacle avoidance}
+ 
+ \subsection{Corners avoidance}
+ 
+ \subsection{Ping scan}
