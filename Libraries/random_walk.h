@@ -56,7 +56,7 @@ void randomWalk(int a, int b, int walkTime) {		// Walktime in seconds
       if (avoidance_whiskers()) {
         avoidedWallTimer = millis();
       }
-/*
+
 
       if (millis() - avoidedWallTimer > avoidedWallTimerThreshold) {
         
@@ -76,7 +76,7 @@ void randomWalk(int a, int b, int walkTime) {		// Walktime in seconds
           currentState = STATE_PING_SCAN;
           break;
         }
-      }*/
+      }
     }
     delay(100);
   }

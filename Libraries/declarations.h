@@ -112,13 +112,17 @@ const int armUp = 90;
 const int armDown = 0;
 
 int leftWhiskerReading, rightWhiskerReading;
-unsigned long avoidedWallTimer;
-const int avoidedWallTimerThreshold = 10000;
+const unsigned long avoidedWallTimerThreshold = 10000;
+unsigned long avoidedWallTimer = avoidedWallTimerThreshold;
+
 
 int IRTurnCounter = 0;
 int IRTurnCountThreshold = 6;
 
 int stopOnBlackCount = 0;
 const int stopOnBlackThreshold = 2;
+
+bool hasChangedSide = false;
+int hasChangedSideCount = 0;
 
 #endif

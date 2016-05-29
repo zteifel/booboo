@@ -56,7 +56,7 @@ void loop() {
     Serial.println("State: Move and avoid");
     
     currentState = STATE_PING_SCAN;
-    randomWalk(0,0,5);  // Go forward dir during 3 sec
+    randomWalk(0,0,6);  // Go forward dir during 3 sec
     
   } else if (currentState == STATE_PING_SCAN) {
 
@@ -96,12 +96,18 @@ void loop() {
     beep();  // Beep if dropped of a cylinder at base
     
     // Start a new roam in a random direction
-    int moveAroundBase = random(0,2);
-    if ( startTime > timeBeforeMoveAround && moveAroundBase > 0 ) {
-      rotateAroundBase();
+    //int moveAroundBase = random(0,2);
+    //if ( startTime > timeBeforeMoveAround && moveAroundBase > 0 ) {
+    if (hasChangedSideCount < 2) {
+      reverseAndRandomDir(20, 30);
+      hasChangedSideCount++;
+      //hasChangedSide = false;
     } else {
-      reverseAndRandomDir(13, 37);
+      //hasChangedSide = true;
+      hasChangedSideCount = 0;
+      rotateAroundBase();
     }
+    //rotateAroundBase();
     currentState = STATE_MOVE_AND_AVOID;
   }
 

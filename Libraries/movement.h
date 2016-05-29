@@ -64,17 +64,55 @@ void rotate(bool clockwise, int speed){
   }
 }
 
+bool avoidObjectsTemp(float irDistLeft, float irDistRight) {
+
+
+  if (irDistLeft < irDistThreshold && irDistRight < irDistThreshold) {
+    reverse();
+    Serial.println("IR Avoidance: Reversing");
+    Serial.print(irDistLeft);
+    Serial.print("  ");
+    Serial.println(irDistRight);
+    return true;
+  } else if (irDistLeft < irDistThreshold) {
+    turnRight();
+    //Serial.println("Right");
+    return true;
+  } else if (irDistRight < irDistThreshold) {
+    turnLeft();
+    //Serial.println("Left");
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool delayWithIRAvoidanceTemp(int delayTime) {
+  unsigned long begin = millis();
+  while (millis() - begin < delayTime) {
+    irDistLeft = irDistance(irLEDPinLeft, irRecPinLeft);
+    irDistRight = irDistance(irLEDPinRight, irRecPinRight);
+    if(!avoidObjectsTemp(irDistLeft, irDistRight)){
+      servoLeft.writeMicroseconds(1500 + 55);
+      servoRight.writeMicroseconds(1500 - 100);
+    }
+    delay(100);
+  }
+}
+
 void rotateAroundBase(){
   reverse();    // Go backwards first
   delay(2500);
   rotate(clockwise, rotationSpeed);	// Rotate
   delay(msPerStep * 9); // Approx 45 degrees
-  servoLeft.writeMicroseconds(1500 + 50);
+  servoLeft.writeMicroseconds(1500 + 55);
   servoRight.writeMicroseconds(1500 - 100);
-  delay(8000);
+  delayWithIRAvoidanceTemp(8000);
   rotate(clockwise, rotationSpeed);	// Rotate
   delay(msPerStep * 9); // Approx 45 degrees
   stopMovement();
 }
+
+
 
 #endif

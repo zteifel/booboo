@@ -42,6 +42,7 @@ void catch_cylinder(){
 
     if(avoidance_whiskers()) {
       currentState = STATE_MOVE_AND_AVOID;
+      avoidedWallTimer = millis();
       break;
     }
 
